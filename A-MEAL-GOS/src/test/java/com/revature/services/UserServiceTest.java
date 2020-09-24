@@ -33,9 +33,9 @@ public class UserServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		sut = new UserService();
+		sut = new UserService(mopitory);
 		mopitory = Mockito.mock(UserDao.class);
-		sut.setUserDao(mopitory);
+//		sut.setUserDao(mopitory);
 		count = 1;
 		mockUsers = new ArrayList<>();
 		user1 = setupUser(user1);
@@ -71,17 +71,6 @@ public class UserServiceTest {
 		user3 = null;
 		user4 = null;
 		user5 = null;
-	}
-
-	@Test
-	public void getUserDao() {
-		assertEquals(mopitory, sut.getUserDao());
-	}
-
-	@Test
-	public void setUserDao() {
-		sut.setUserDao(mopitory);
-		assertEquals(mopitory, sut.getUserDao());
 	}
 
 	@Test(expected = ResourceNotFoundException.class)

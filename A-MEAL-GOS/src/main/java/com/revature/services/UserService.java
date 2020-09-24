@@ -6,6 +6,7 @@ import com.revature.exceptions.AuthenticationException;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
 import com.revature.models.AppUser;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,15 +18,13 @@ public class UserService {
 	/**
 	 * An <code>{@link AppUser}</code> Data Access Object Instance.
 	 */
-	private UserDao userDao = new UserDao();
+	private UserDao userDao;
 
-	public UserDao getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserDao userDao) {
+	@Autowired
+	public UserService(UserDao userDao){
 		this.userDao = userDao;
 	}
+
 //region Constructors
 //	public UserService(UserDao repo){
 ////		System.out.println("[LOG] - Instantiating " + this.getClass().getName());
