@@ -3,25 +3,33 @@ package com.revature.util;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.context.ContextLoaderListener;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRegistration;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@EnableWebMvc
 @Configuration
-@ComponentScan
+@ComponentScan("com.revature")
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableTransactionManagement
 @PropertySource("classpath:application.properties")
-public class ApplicationConfig {
+public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitializer {
 
 	@Value("${db.driver}")
 	private String dbDriver;
@@ -40,7 +48,6 @@ public class ApplicationConfig {
 
 	@Bean
 	public BasicDataSource dataSource() {
-		System.out.println("Creating BasicDataSource bean...");
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(dbDriver);
 		dataSource.setUrl(dbUrl);
@@ -52,32 +59,41 @@ public class ApplicationConfig {
 
 	@Bean
 	public LocalSessionFactoryBean sessionFactory() {
-		System.out.println("Creating SessionFactory bean...");
 		LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
 		sessionFactory.setDataSource(dataSource());
-		sessionFactory.setPackagesToScan("com.revature");
+		sessionFactory.setPackagesToScan("com.revature"); // tell hibernate where to look for entities.
 		sessionFactory.setHibernateProperties(hibernateProperties());
-		System.out.println("SessionFactory bean successfully created");
 		return sessionFactory;
 	}
 
 	@Bean
 	public PlatformTransactionManager txManager() {
-		System.out.println("Creating PlatformTransactionManager bean...");
 		HibernateTransactionManager transactionManager = new HibernateTransactionManager();
 		transactionManager.setSessionFactory(sessionFactory().getObject());
-		System.out.println("PlatformTransactionManager bean successfully created");
 		return transactionManager;
 	}
 
+	// NOT A BEAN
 	private final Properties hibernateProperties() {
-		System.out.println("Loading Hibernate properties");
 		Properties hibernateProperties = new Properties();
 		hibernateProperties.setProperty(Environment.DIALECT, "org.hibernate.dialect.PostgreSQL95Dialect");
 		hibernateProperties.setProperty(Environment.SHOW_SQL, "true");
 		hibernateProperties.setProperty(Environment.FORMAT_SQL, "true");
-		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "validate");
-		System.out.println("Hibernate properties loaded");
+		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+//		hibernateProperties.setProperty(Environment.HBM2DDL_IMPORT_FILES, "import.sql");
 		return hibernateProperties;
+	}
+
+	@Override
+	public void onStartup(ServletContext servletContext) throws ServletException {
+
+		AnnotationConfigWebApplicationContext container = new AnnotationConfigWebApplicationContext();
+		container.register(ApplicationConfig.class);
+
+		servletContext.addListener(new ContextLoaderListener(container));
+		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("DispatcherServlet", new DispatcherServlet(container));
+		dispatcher.setLoadOnStartup(1);
+		dispatcher.addMapping("/");
+
 	}
 }

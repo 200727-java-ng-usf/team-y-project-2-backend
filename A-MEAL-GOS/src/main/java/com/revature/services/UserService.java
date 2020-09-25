@@ -1,19 +1,23 @@
 package com.revature.services;
 
 import com.revature.daos.UserDao;
-import com.revature.dtos.Credentials;
-import com.revature.exceptions.AuthenticationException;
-import com.revature.exceptions.InvalidRequestException;
-import com.revature.exceptions.ResourceNotFoundException;
+import com.revature.exceptions.*;
 import com.revature.models.AppUser;
+import com.revature.web.dtos.Credentials;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 /**
  * Models all services and operations that might apply to <code>{@link AppUser}</code>s.
  */
+@Service
 public class UserService {
 	/**
 	 * An <code>{@link AppUser}</code> Data Access Object Instance.
@@ -38,9 +42,14 @@ public class UserService {
 	 * Returns all users registered with the bank database.
 	 * @return a Set of <code>{@link AppUser}</code>s that have been registered and saved to the bank database
 	 */
+	@Transactional(readOnly = true)
 	public List<AppUser> getAllUser() throws ResourceNotFoundException {
-
-		List<AppUser> users = userDao.findAll();
+		List<AppUser> users = new ArrayList<>();
+		try{
+			users = userDao.findAll();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 		if(users.isEmpty()){
 			throw new ResourceNotFoundException();
 		}
@@ -52,13 +61,18 @@ public class UserService {
 	 * @param id the int id to search by
 	 * @return the first <code>{@link AppUser}</code> found with the given id.
 	 */
+	@Transactional(readOnly = true)
 	public AppUser getUserById(int id) throws ResourceNotFoundException {
 		if(id <= 0){
 			throw new InvalidRequestException("The provided id cannot be less than or equal to zero.");
 		}
 
-		return userDao.findUserById(id)
-				.orElseThrow(ResourceNotFoundException::new);
+		try{
+			return userDao.findUserById(id)
+					.orElseThrow(ResourceNotFoundException::new);
+		} catch(Exception e) {
+			throw new AmealgoException(e);
+		}
 	}
 
 	/**
@@ -66,8 +80,17 @@ public class UserService {
 	 * @param username the String username to search by.
 	 * @return the first <code>{@link AppUser}</code> found with the given username.
 	 */
+	@Transactional(readOnly = true)
 	public AppUser getUserByUsername(String username){
-		return userDao.findUserByUsername(username).orElse(null);
+		if(username == null || username.equals("")){
+			throw new InvalidRequestException("Username cannot be null or empty.");
+		}
+		try{
+			return userDao.findUserByUsername(username)
+					.orElseThrow(ResourceNotFoundException::new);
+		} catch(Exception e) {
+			throw new AmealgoException(e);
+		}
 	}
 
 	/**
@@ -77,41 +100,49 @@ public class UserService {
 	 * then the method will not authenticate.
 	 * @param credentials the <code>{@link Credentials}</code> to authenticate.
 	 */
+	@Transactional
 	public AppUser authenticate(Credentials credentials) throws AuthenticationException{
 		// Validate that the provided username and password are not non-values
-		if(credentials.getUsername() == null || credentials.getUsername().trim().equals("")
+		if(credentials == null || credentials.getUsername() == null || credentials.getUsername().trim().equals("")
 				|| credentials.getPassword() == null || credentials.getPassword().trim().equals("")){
 			throw new InvalidRequestException("Invalid credential values provided");
 		}
-		AppUser user = userDao.findUserByUsername(credentials.getUsername())
-				.orElseThrow(AuthenticationException::new);
-		if(!user.validatePassword(
-				credentials.getPassword(),
-				user.getPasswordHash(),
-				user.getPasswordSalt())){
-			throw new AuthenticationException();
+
+		try{
+			AppUser user = userDao.findUserByUsername(credentials.getUsername())
+					.orElseThrow(AuthenticationException::new);
+			if(!user.validatePassword(
+					credentials.getPassword(),
+					user.getPasswordHash(),
+					user.getPasswordSalt())){
+				throw new AuthenticationException("Incorrect Password.");
+			}
+			return (user);
+		} catch(Exception e) {
+			throw new AmealgoException(e);
 		}
-		return user;
 	}
 
 	/**
 	 * This method registers a new <code>{@link AppUser}</code> into the database.
 	 * @param newUser the <code>{@link AppUser}</code> to store/register in the database.
 	 */
-	public void register(AppUser newUser){
+	@Transactional
+	public AppUser register(AppUser newUser){
 		//
 		if(!isUserValid(newUser)){
 			throw new InvalidRequestException("Invalid user field values provided during registration!");
 		}
-		Optional<AppUser> existingUser = userDao.findUserByUsername(newUser.getUsername());
-
-		if(existingUser.isPresent()){
-			throw new AuthenticationException("Provided username is already in use!");
+		if(!isEmailAvailable(newUser.getEmail())){
+			throw new ResourcePersistenceException("The provided email is already taken!");
+		}
+		try{
+			userDao.save(newUser);
+		} catch(Exception e) {
+			throw new ResourcePersistenceException("Could not persist new AppUser!");
 		}
 
-		userDao.save(newUser);
-
-//		app.setCurrentUser(newUser);
+		return newUser;
 	}
 
 	/**
@@ -120,6 +151,7 @@ public class UserService {
 	 * @param user the <code>{@link AppUser}</code> to update.
 	 * @return returns true if the update was successful, false otherwise.
 	 */
+	@Transactional(readOnly = false)
 	public boolean updateUser(AppUser user){
 		return userDao.update(user);
 	}
@@ -131,6 +163,7 @@ public class UserService {
 	 * @return returns true if the deletion was successful, false if otherwise.
 	 * 		If there was no such user, returns true.
 	 */
+	@Transactional(readOnly = false)
 	public boolean deleteUserById(int id){
 		return userDao.deleteById(id);
 	}
@@ -142,6 +175,7 @@ public class UserService {
 	 * @return returns true if the deletion was successful, false if otherwise.
 	 * 		If there was no such user, returns true.
 	 */
+	@Transactional(readOnly = false)
 	public boolean deleteUserByUsername(String username){
 		return userDao.deleteByUsername(username);
 	}
@@ -151,9 +185,20 @@ public class UserService {
 	 * @param username the username to find the availability of
 	 * @return true if no <code>{@link AppUser}</code> in the database has the given username.
 	 */
+	@Transactional(readOnly = true)
 	public boolean isUsernameAvailable(String username) {
-		AppUser user = userDao.findUserByUsername(username).orElse(null);
-		return user == null;
+		if(username == null || username.equals("")){
+			throw new InvalidRequestException("Username cannot be null or empty!");
+		}
+		try{
+			userDao.findUserByUsername(username);
+
+		} catch(NoResultException nre){
+			return true;
+		} catch (Exception e) {
+			throw new AmealgoException(e);
+		}
+		return false;
 	}
 
 	/**
@@ -161,9 +206,19 @@ public class UserService {
 	 * @param email the email to find the availability of
 	 * @return true if no <code>{@link AppUser}</code> in the database has the given email.
 	 */
+	@Transactional(readOnly = true)
 	public boolean isEmailAvailable(String email) {
-		AppUser user = userDao.findUserByEmail(email).orElse(null);
-		return user == null;
+		if(email == null || email.equals("")){
+			throw new InvalidRequestException("Email cannot be null or empty!");
+		}
+		try{
+			userDao.findUserByEmail(email);
+		} catch(NoResultException nre){
+			return true;
+		} catch (Exception e) {
+			throw new AmealgoException(e);
+		}
+		return false;
 	}
 
 	/**

@@ -20,22 +20,52 @@ import java.util.Objects;
  * email
  */
 @Entity
-@Table(name = "amealgo.ers_users")
+@Table(name = "appuser", schema = "amealgos")
 public class AppUser {
 
 	//region Fields
+	/*
+	 * GenerationTypes
+	 * 		AUTO
+	 * 			Default.
+	 * 		IDENTITY
+	 * 			Uses auto-incrementing value
+	 * 		SEQUENCE
+	 * 			Hibernate provides the SequenceStyleGenerator class.
+	 * 				This class uses sequences if they're supported by the database, and switches to Table if not.
+	 * 			Requires the use of the @GenericGenerator tag:
+	 * 				@GenericGenerator(
+						name = "sequence-generator",
+						strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+						parameters = {
+							@Parameter(name = "sequence_name", value = "user_sequence"),
+							@Parameter(name = "initial_value", value = "4"),
+							@Parameter(name = "increment_size", value = "1")
+						}
+					)
+	 * 		TABLE
+	 * 			Uses underlying database table that holds segments of identifier generation values.
+	 * 				@GeneratedValue(strategy = GenerationType.TABLE,
+						generator = "table-generator")
+					@TableGenerator(name = "table-generator",
+						table = "dep_ids",
+						pkColumnName = "seq_id",
+						valueColumnName = "seq_value")
+	 * 			This method does not scale well and can negatively affect performance.
+	 *
+	 */
 	@Id
 	@Column(name="amg_user_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@Column(name="username")
+	@Column(name="username", nullable = false)
 	private String username;
 
-	@Column(name="password_hash")
+	@Column(name="password_hash", nullable = false)
 	private byte[] passwordHash;
-	@Column(name="password_salt")
+	@Column(name="password_salt", nullable = false)
 	private byte[] passwordSalt;
-	@Column(name="email")
+	@Column(name="email", unique = true, nullable = false)
 	private String email;
 	//endregion
 
