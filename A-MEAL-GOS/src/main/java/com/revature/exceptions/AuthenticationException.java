@@ -4,14 +4,14 @@ package com.revature.exceptions;
  * Thrown when a potential entity is not registered with the system,
  * i.e., a user tries to login to a server they have not registered with.
  */
-public class AuthenticationException extends RuntimeException {
+public class AuthenticationException extends AmealgoException {
 
 	/**
 	 * creates this exception and prints "User authentication failed!"
 	 * to the screen.
 	 */
 	public AuthenticationException() {
-		super("User authentication failed!");
+		super("Authentication failed!");
 	}
 
 	/**

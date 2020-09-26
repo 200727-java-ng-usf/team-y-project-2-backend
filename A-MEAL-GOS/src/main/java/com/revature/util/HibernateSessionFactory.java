@@ -60,6 +60,14 @@ public class HibernateSessionFactory {
 
 		try{
 
+			System.out.println(props.getProperty("url"));
+			System.out.println(props.getProperty("username"));
+			System.out.println(props.getProperty("password"));
+			System.out.println(props.getProperty("db.url"));
+			System.out.println(props.getProperty("db.username"));
+			System.out.println(props.getProperty("db.password"));
+			System.out.println(props.getProperty("db.driver"));
+			System.out.println(props.getProperty("db.schema"));
 			Configuration config = new Configuration()
 					.setProperty("hibernate.connection.driver_class", "org.postgresql.Driver")
 					.setProperty("hibernate.connection.url", "jdbc:" +
