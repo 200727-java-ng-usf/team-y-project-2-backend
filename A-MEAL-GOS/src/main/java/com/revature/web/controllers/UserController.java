@@ -2,6 +2,7 @@ package com.revature.web.controllers;
 
 import com.revature.models.AppUser;
 import com.revature.services.UserService;
+import com.revature.web.dtos.Credentials;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,7 +42,10 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public AppUser registerUser(@RequestBody AppUser newUser){
+	public AppUser registerUser(@RequestBody Credentials creds){
+
+		AppUser newUser = new AppUser(creds.getUsername(), creds.getPassword(), creds.getEmail());
+
 		return userService.register(newUser);
 	}
 

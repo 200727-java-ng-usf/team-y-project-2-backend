@@ -107,6 +107,8 @@ create table meal_users(
 	 (user_id) 
 ); 
 
+SELECT * FROM appuser;
+
 
 -- +-------------------------------------------------------------+
 -- +                    	  TEST DATA

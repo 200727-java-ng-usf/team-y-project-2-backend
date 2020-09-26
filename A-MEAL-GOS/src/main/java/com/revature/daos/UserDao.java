@@ -226,8 +226,13 @@ public class UserDao implements CrudDao<AppUser> {
 	 * 			If none match the email, an <code>{@link Optional}</code>.empty() is returned.
 	 */
 	public Optional<AppUser> findUserByEmail(String email) {
+		System.out.println("In UserDao.findByEmail");
 		Session session = sessionFactory.getCurrentSession();
-		return Optional.of(session.get(AppUser.class, email)); // get returns null, load throws an error.
+		return Optional.ofNullable(session.createQuery("from AppUser au where au.email = :email", AppUser.class)
+					.setParameter("email", email)
+					.getSingleResult());
+
+//		return Optional.of(session.get(AppUser.class, email)); // get returns null, load throws an error.
 	}
 
 	/**
