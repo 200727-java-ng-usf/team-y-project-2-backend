@@ -1,4 +1,4 @@
-package com.revature.dtos;
+package com.revature.web.dtos;
 
 import java.util.Objects;
 
