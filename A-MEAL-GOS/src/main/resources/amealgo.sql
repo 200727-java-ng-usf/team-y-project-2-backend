@@ -102,6 +102,8 @@ create table amg_votes(
 		references amg_users (amg_user_id) 
 ); 
 
+SELECT * FROM appuser;
+
 
 -- +-------------------------------------------------------------+ 
 -- +                    	  TEST DATA 

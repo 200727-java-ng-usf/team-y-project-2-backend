@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.NoResultException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -133,10 +134,15 @@ public class UserService {
 		if(!isUserValid(newUser)){
 			throw new InvalidRequestException("Invalid user field values provided during registration!");
 		}
+
 		if(!isEmailAvailable(newUser.getEmail())){
 			throw new ResourcePersistenceException("The provided email is already taken!");
 		}
+
+		System.out.println("Method stops at register.isEmailAvailable, If you see this, then it's fixed");
+
 		try{
+			System.out.println("Attempting to save newUser");
 			userDao.save(newUser);
 		} catch(Exception e) {
 			throw new ResourcePersistenceException("Could not persist new AppUser!");
@@ -222,7 +228,6 @@ public class UserService {
 	 * @return true if the <code>{@link AppUser}</code> is valid.
 	 */
 	public boolean isUserValid(AppUser user){
-
 		if(user == null) return false;
 		if(user.getUsername() == null || user.getUsername().trim().equals("")) return false;
 		if(user.getPasswordHash() == null || user.getPasswordHash().length == 0) return false;
