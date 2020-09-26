@@ -1,15 +1,19 @@
 package com.revature.services;
 
 import com.revature.daos.UserDao;
-import com.revature.dtos.Credentials;
-import com.revature.exceptions.AuthenticationException;
-import com.revature.exceptions.InvalidRequestException;
-import com.revature.exceptions.ResourceNotFoundException;
+import com.revature.exceptions.*;
+import com.revature.web.dtos.Credentials;
 import com.revature.models.AppUser;
+import com.revature.util.ApplicationConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +24,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = ApplicationConfig.class)
 public class UserServiceTest {
+	@Autowired
 	private UserService sut;
 	private UserDao mopitory;
 	private List<AppUser> mockUsers;
@@ -33,9 +41,9 @@ public class UserServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		sut = new UserService();
 		mopitory = Mockito.mock(UserDao.class);
-		sut.setUserDao(mopitory);
+		sut = new UserService(mopitory);
+//		sut.setUserDao(mopitory);
 		count = 1;
 		mockUsers = new ArrayList<>();
 		user1 = setupUser(user1);
@@ -50,13 +58,13 @@ public class UserServiceTest {
 		mockUsers.add(user5);
 	}
 
-	private AppUser setupUser(AppUser u){
+	private AppUser setupUser(AppUser u) {
 		u = Mockito.mock(AppUser.class);
 		when(u.getId()).thenReturn((int) count++);
-		when(u.getUsername()).thenReturn("LookAtMe"+count);
+		when(u.getUsername()).thenReturn("LookAtMe" + count);
 		when(u.getPasswordHash()).thenReturn(new byte[10]);
 		when(u.getPasswordSalt()).thenReturn(new byte[10]);
-		when(u.getEmail()).thenReturn("mr.meseeks"+count+"@yessirree.org");
+		when(u.getEmail()).thenReturn("mr.meseeks" + count + "@yessirree.org");
 		return u;
 	}
 
@@ -71,17 +79,6 @@ public class UserServiceTest {
 		user3 = null;
 		user4 = null;
 		user5 = null;
-	}
-
-	@Test
-	public void getUserDao() {
-		assertEquals(mopitory, sut.getUserDao());
-	}
-
-	@Test
-	public void setUserDao() {
-		sut.setUserDao(mopitory);
-		assertEquals(mopitory, sut.getUserDao());
 	}
 
 	@Test(expected = ResourceNotFoundException.class)
@@ -100,7 +97,7 @@ public class UserServiceTest {
 		sut.getUserById(-1);
 	}
 
-	@Test(expected = ResourceNotFoundException.class)
+	@Test(expected = AmealgoException.class)
 	public void getNoUserById() throws InvalidRequestException, ResourceNotFoundException {
 		sut.getUserById(1);
 	}
@@ -117,10 +114,10 @@ public class UserServiceTest {
 		assertEquals(user1, sut.getUserByUsername("LookAtMe1"));
 	}
 
-	@Test
+	@Test(expected = AmealgoException.class)
 	public void getNullUserByUsername() {
 		when(mopitory.findUserByUsername("Jerry")).thenReturn(null);
-		assertEquals(null, sut.getUserByUsername("LookAtMe1"));
+		sut.getUserByUsername("LookAtMe1");
 	}
 
 	@Test
@@ -173,7 +170,7 @@ public class UserServiceTest {
 		assertEquals(user1, sut.authenticate(creds));
 	}
 
-	@Test(expected = AuthenticationException.class)
+	@Test(expected = AmealgoException.class)
 	public void authenticateInvalidPassword() {
 		Credentials creds = Mockito.mock(Credentials.class);
 		when(creds.getUsername()).thenReturn("Mr.");
@@ -195,9 +192,9 @@ public class UserServiceTest {
 		sut.register(null);
 	}
 
-	@Test(expected = AuthenticationException.class)
+	@Test(expected = ResourcePersistenceException.class)
 	public void registerPreexistingUser() {
-		when(mopitory.findUserByUsername(user1.getUsername())).thenReturn(Optional.of(user1));
+		when(mopitory.findUserByEmail(user1.getEmail())).thenReturn(Optional.of(user1));
 		sut.register(user1);
 	}
 
