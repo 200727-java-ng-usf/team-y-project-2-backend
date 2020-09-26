@@ -1,7 +1,6 @@
 package com.revature.daos;
 
 import com.revature.models.AppUser;
-import com.revature.util.HibernateSessionFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,7 +26,7 @@ import java.util.Optional;
 public class UserDao implements CrudDao<AppUser> {
 
 	/**
-	 * The <code>{@link HibernateSessionFactory}</code> sessionFactory instance.
+	 * The <code>{@link SessionFactory}</code> sessionFactory instance.
 	 */
 	private SessionFactory sessionFactory;
 
