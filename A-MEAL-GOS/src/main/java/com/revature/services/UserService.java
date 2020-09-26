@@ -191,14 +191,10 @@ public class UserService {
 			throw new InvalidRequestException("Username cannot be null or empty!");
 		}
 		try{
-			userDao.findUserByUsername(username);
-
-		} catch(NoResultException nre){
-			return true;
+			return userDao.findUserByUsername(username).orElse(null) == null;
 		} catch (Exception e) {
 			throw new AmealgoException(e);
 		}
-		return false;
 	}
 
 	/**
@@ -212,13 +208,10 @@ public class UserService {
 			throw new InvalidRequestException("Email cannot be null or empty!");
 		}
 		try{
-			userDao.findUserByEmail(email);
-		} catch(NoResultException nre){
-			return true;
+			return userDao.findUserByEmail(email).orElse(null) == null;
 		} catch (Exception e) {
 			throw new AmealgoException(e);
 		}
-		return false;
 	}
 
 	/**
