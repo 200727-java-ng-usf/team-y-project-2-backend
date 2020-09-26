@@ -213,10 +213,8 @@ public class UserService {
 		if(email == null || email.equals("")){
 			throw new InvalidRequestException("Email cannot be null or empty!");
 		}
-		try {
-			return userDao.findUserByEmail(email).isPresent();
-		} catch (NoResultException nre) {
-			return true;
+		try{
+			return userDao.findUserByEmail(email).orElse(null) == null;
 		} catch (Exception e) {
 			throw new AmealgoException(e);
 		}

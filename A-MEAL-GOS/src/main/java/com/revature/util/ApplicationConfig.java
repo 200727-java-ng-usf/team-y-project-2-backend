@@ -79,7 +79,12 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		hibernateProperties.setProperty(Environment.DIALECT, "org.hibernate.dialect.PostgreSQL95Dialect");
 		hibernateProperties.setProperty(Environment.SHOW_SQL, "true");
 		hibernateProperties.setProperty(Environment.FORMAT_SQL, "true");
-		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create");
+		//	validate: validate the schema, makes no changes to the database.
+		//	update: update the schema.
+		//	create: creates the schema, destroying previous data.
+		//	create-drop: drop the schema when the SessionFactory is closed explicitly, typically when the application is stopped.
+		//	none: does nothing with the schema, makes no changes to the database
+		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "validate");
 //		hibernateProperties.setProperty(Environment.HBM2DDL_IMPORT_FILES, "import.sql");
 		return hibernateProperties;
 	}
