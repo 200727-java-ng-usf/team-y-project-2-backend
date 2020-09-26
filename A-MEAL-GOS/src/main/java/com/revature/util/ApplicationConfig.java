@@ -79,7 +79,7 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		hibernateProperties.setProperty(Environment.DIALECT, "org.hibernate.dialect.PostgreSQL95Dialect");
 		hibernateProperties.setProperty(Environment.SHOW_SQL, "true");
 		hibernateProperties.setProperty(Environment.FORMAT_SQL, "true");
-		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
+		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create");
 //		hibernateProperties.setProperty(Environment.HBM2DDL_IMPORT_FILES, "import.sql");
 		return hibernateProperties;
 	}
