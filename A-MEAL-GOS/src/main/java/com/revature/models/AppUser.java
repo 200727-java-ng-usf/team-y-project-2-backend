@@ -20,7 +20,7 @@ import java.util.Objects;
  * email
  */
 @Entity
-@Table(name = "appuser", schema = "amealgos")
+@Table(name = "amg_users", schema = "amealgos")
 public class AppUser {
 
 	//region Fields
