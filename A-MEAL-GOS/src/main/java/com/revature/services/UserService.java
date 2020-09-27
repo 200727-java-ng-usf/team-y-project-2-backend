@@ -131,7 +131,7 @@ public class UserService {
 	 */
 	@Transactional
 	public AppUser register(AppUser newUser){
-		//
+
 		if(!isUserValid(newUser)){
 			throw new InvalidRequestException("Invalid user field values provided during registration!");
 		}
@@ -140,14 +140,12 @@ public class UserService {
 			throw new ResourcePersistenceException("The provided email is already taken!");
 		}
 
-		System.out.println("Method stops at register.isEmailAvailable, If you see this, then it's fixed");
-
 		try{
-			System.out.println("Attempting to save newUser");
 			userDao.save(newUser);
 		} catch(Exception e) {
 			throw new ResourcePersistenceException("Could not persist new AppUser!");
 		}
+
 
 		return newUser;
 	}
@@ -214,8 +212,10 @@ public class UserService {
 		if(email == null || email.equals("")){
 			throw new InvalidRequestException("Email cannot be null or empty!");
 		}
-		try{
-			return userDao.findUserByEmail(email).orElse(null) == null;
+		try {
+			return !userDao.findUserByEmail(email).isPresent();
+		} catch (NoResultException nre) {
+			return true;
 		} catch (Exception e) {
 			throw new AmealgoException(e);
 		}

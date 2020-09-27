@@ -45,9 +45,7 @@ public class UserController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public AppUser registerUser(@RequestBody Credentials creds){
-
 		AppUser newUser = new AppUser(creds.getUsername(), creds.getPassword(), creds.getEmail());
-
 		return userService.register(newUser);
 	}
 
