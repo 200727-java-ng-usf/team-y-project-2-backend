@@ -3,6 +3,7 @@ package com.revature.web.controllers;
 import com.revature.models.AppUser;
 import com.revature.services.UserService;
 import com.revature.web.dtos.Credentials;
+import com.revature.web.security.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ public class UserController {
 	}
 
 	// produces is good practice to include.
+	@Secured(allowedRoles = {"Admin", "Manager"})
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<AppUser> getAllUsers(){
 		return userService.getAllUser();

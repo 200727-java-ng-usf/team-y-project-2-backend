@@ -4,12 +4,12 @@ import com.revature.daos.UserDao;
 import com.revature.exceptions.*;
 import com.revature.models.AppUser;
 import com.revature.web.dtos.Credentials;
+import com.revature.web.dtos.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -102,7 +102,7 @@ public class UserService {
 	 * @param credentials the <code>{@link Credentials}</code> to authenticate.
 	 */
 	@Transactional
-	public AppUser authenticate(Credentials credentials) throws AuthenticationException{
+	public Principal authenticate(Credentials credentials) throws AuthenticationException{
 		// Validate that the provided username and password are not non-values
 		if(credentials == null || credentials.getUsername() == null || credentials.getUsername().trim().equals("")
 				|| credentials.getPassword() == null || credentials.getPassword().trim().equals("")){
@@ -118,7 +118,8 @@ public class UserService {
 					user.getPasswordSalt())){
 				throw new AuthenticationException("Incorrect Password.");
 			}
-			return (user);
+			return new Principal(user);
+//			return (user);
 		} catch(Exception e) {
 			throw new AmealgoException(e);
 		}

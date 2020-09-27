@@ -67,6 +67,8 @@ public class AppUser {
 	private byte[] passwordSalt;
 	@Column(name="email", unique = true, nullable = false)
 	private String email;
+	@Enumerated(EnumType.STRING)
+	private Role role;
 	//endregion
 
 	//region Constructors
@@ -97,6 +99,19 @@ public class AppUser {
 		this.id = id;
 	}
 
+	public AppUser(String username, String email, Role role) {
+		this(username, email);
+		this.role = role;
+	}
+	public AppUser(String username, String password, String email, Role role) {
+		this(username, password, email);
+		this.role = role;
+	}
+	public AppUser(int id, String username, String password, String email, Role role) {
+		this(id, username, password, email);
+		this.role = role;
+	}
+
 	private AppUser(int id, String username, byte[] passwordHash, byte[] passwordSalt, String email) {
 		this(username, email);
 		this.id = id;
@@ -104,8 +119,13 @@ public class AppUser {
 		this.passwordSalt = passwordSalt;
 	}
 
+	public AppUser(int id, String username, byte[] passwordHash, byte[] passwordSalt, String email, Role role) {
+		this(id, username, passwordHash, passwordSalt, email);
+		this.role = role;
+	}
+
 	public AppUser(AppUser user){
-		this(user.id, user.username, user.passwordHash, user.passwordSalt, user.email);
+		this(user.id, user.username, user.passwordHash, user.passwordSalt, user.email, user.role);
 	}
 	//endregion
 
@@ -156,6 +176,14 @@ public class AppUser {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	//endregion
 
@@ -213,6 +241,7 @@ public class AppUser {
 
 	//region OverRidden Methods
 
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -222,12 +251,13 @@ public class AppUser {
 				Objects.equals(username, appUser.username) &&
 				Arrays.equals(passwordHash, appUser.passwordHash) &&
 				Arrays.equals(passwordSalt, appUser.passwordSalt) &&
-				Objects.equals(email, appUser.email);
+				Objects.equals(email, appUser.email) &&
+				role == appUser.role;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(id, username, email);
+		int result = Objects.hash(id, username, email, role);
 		result = 31 * result + Arrays.hashCode(passwordHash);
 		result = 31 * result + Arrays.hashCode(passwordSalt);
 		return result;
@@ -239,6 +269,7 @@ public class AppUser {
 				"id=" + id +
 				", username='" + username + '\'' +
 				", email='" + email + '\'' +
+				", role=" + role +
 				'}';
 	}
 
@@ -250,6 +281,7 @@ public class AppUser {
 				", passwordHash=" + Arrays.toString(passwordHash) +
 				", passwordSalt=" + Arrays.toString(passwordSalt) +
 				", email='" + email + '\'' +
+				", role=" + role +
 				'}';
 	}
 

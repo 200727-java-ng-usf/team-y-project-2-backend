@@ -1,8 +1,6 @@
 package com.revature.web.aspects;
 
-import com.revature.exceptions.InvalidRequestException;
-import com.revature.exceptions.ResourceNotFoundException;
-import com.revature.exceptions.ResourcePersistenceException;
+import com.revature.exceptions.*;
 import com.revature.web.dtos.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -31,6 +29,19 @@ public class ErrorResponseAspect {
 	public ErrorResponse handleInvalidRequests(InvalidRequestException ire){
 		return new ErrorResponse(400, ire.getMessage());
 	}
+
+	@ExceptionHandler
+	@ResponseStatus(HttpStatus.UNAUTHORIZED)
+	public ErrorResponse handleAuthenticationIssues(AuthenticationException ae){
+		return new ErrorResponse(401, ae.getMessage());
+	}
+
+	@ExceptionHandler
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	public ErrorResponse handleForbiddenRequests(AuthorizationException ae) {
+		return new ErrorResponse(403, ae.getMessage());
+	}
+
 
 }
 

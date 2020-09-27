@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Component
 public class LoggingAspect {
 
-	@Pointcut("within(com.revature.quizzard..*)")
+	@Pointcut("within(com.revature..*)")
 	public void logAll(){}
 
 	@Before("logAll()") // reuse logAll's pointcut
@@ -31,7 +31,7 @@ public class LoggingAspect {
 	}
 
 	@AfterThrowing(pointcut = "logAll()", throwing = "e")
-	public void errorOccurence(JoinPoint jp, Exception e){
+	public void errorOccurrence(JoinPoint jp, Exception e){
 		String methodSig = extractMethodSignature(jp);
 		System.out.println(e + "was thrown in method " + methodSig + " at " + LocalDateTime.now());
 	}
