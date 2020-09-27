@@ -23,7 +23,7 @@ create table amg_restaurants(
 	amg_restaurant_id				serial not null, 
 	place_id 						text, -- the Google Maps id for a specific place 
 	restaurant_name					text, -- the name of the restaurant 
-	maps_link						text, -- the URI of the restaurant's Google Maps page 
+	address						    text, -- the address of the restaurant
 	constraint amg_restaurant_id_pk 
 		primary key(amg_restaurant_id) 
 );
