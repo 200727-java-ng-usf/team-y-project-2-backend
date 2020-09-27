@@ -12,7 +12,7 @@ import java.util.Arrays;
 @Component
 public class LoggingAspect {
 
-	@Pointcut("within(com.revature.quizzard..*)")
+	@Pointcut("within(com.revature..*)")
 	public void logAll(){}
 
 	@Before("logAll()") // reuse logAll's pointcut
