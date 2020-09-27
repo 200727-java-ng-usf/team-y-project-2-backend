@@ -2,14 +2,19 @@ package com.revature.services;
 
 import com.revature.daos.UserDao;
 import com.revature.exceptions.*;
+import com.revature.models.Role;
 import com.revature.web.dtos.Credentials;
 import com.revature.models.AppUser;
 import com.revature.util.ApplicationConfig;
+import com.revature.web.dtos.Principal;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -20,12 +25,13 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @WebAppConfiguration
-@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(fullyQualifiedNames = "com.revature.*")
 @ContextConfiguration(classes = ApplicationConfig.class)
 public class UserServiceTest {
 	@Autowired
@@ -60,11 +66,13 @@ public class UserServiceTest {
 
 	private AppUser setupUser(AppUser u) {
 		u = Mockito.mock(AppUser.class);
-		when(u.getId()).thenReturn((int) count++);
+		when(u.getId()).thenReturn((int) count);
 		when(u.getUsername()).thenReturn("LookAtMe" + count);
 		when(u.getPasswordHash()).thenReturn(new byte[10]);
 		when(u.getPasswordSalt()).thenReturn(new byte[10]);
 		when(u.getEmail()).thenReturn("mr.meseeks" + count + "@yessirree.org");
+		when(u.getRole()).thenReturn(Role.BASIC_USER);
+		count++;
 		return u;
 	}
 
@@ -121,13 +129,20 @@ public class UserServiceTest {
 	}
 
 	@Test
-	public void authenticate() {
+	public void authenticate() throws Exception {
 		Credentials creds = Mockito.mock(Credentials.class);
 		when(creds.getUsername()).thenReturn("Mr.");
 		when(creds.getPassword()).thenReturn("password");
 		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
-		assertEquals(user1, sut.authenticate(creds));
+		Principal p = Mockito.mock(Principal.class);
+		when(p.getId()).thenReturn(1);
+		when(p.getRole()).thenReturn("Basic User");
+		when(p.getUsername()).thenReturn("LookAtMe1");
+		PowerMockito.whenNew(Principal.class).withArguments(user1).thenReturn(p);
+		assertEquals(user1.getId(), sut.authenticate(creds).getId());
+		assertEquals(user1.getRole().toString(), sut.authenticate(creds).getRole());
+		assertEquals(user1.getUsername(), sut.authenticate(creds).getUsername());
 	}
 
 	@Test(expected = InvalidRequestException.class)
@@ -137,7 +152,8 @@ public class UserServiceTest {
 		when(creds.getPassword()).thenReturn("password");
 		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
-		assertEquals(user1, sut.authenticate(creds));
+		assertEquals(user1.getId(), sut.authenticate(creds).getId());
+		assertEquals(user1.getUsername(), sut.authenticate(creds).getUsername());
 	}
 
 	@Test(expected = InvalidRequestException.class)
@@ -147,7 +163,8 @@ public class UserServiceTest {
 		when(creds.getPassword()).thenReturn("password");
 		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
-		assertEquals(user1, sut.authenticate(creds));
+		assertEquals(user1.getId(), sut.authenticate(creds).getId());
+		assertEquals(user1.getUsername(), sut.authenticate(creds).getUsername());
 	}
 
 	@Test(expected = InvalidRequestException.class)
@@ -157,7 +174,8 @@ public class UserServiceTest {
 		when(creds.getPassword()).thenReturn(null);
 		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
-		assertEquals(user1, sut.authenticate(creds));
+		assertEquals(user1.getId(), sut.authenticate(creds).getId());
+		assertEquals(user1.getUsername(), sut.authenticate(creds).getUsername());
 	}
 
 	@Test(expected = InvalidRequestException.class)
@@ -167,7 +185,8 @@ public class UserServiceTest {
 		when(creds.getPassword()).thenReturn("");
 		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
-		assertEquals(user1, sut.authenticate(creds));
+		assertEquals(user1.getId(), sut.authenticate(creds).getId());
+		assertEquals(user1.getUsername(), sut.authenticate(creds).getUsername());
 	}
 
 	@Test(expected = AmealgoException.class)
@@ -177,12 +196,13 @@ public class UserServiceTest {
 		when(creds.getPassword()).thenReturn("password");
 		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(false);
-		assertEquals(user1, sut.authenticate(creds));
+		assertEquals(user1.getId(), sut.authenticate(creds).getId());
+		assertEquals(user1.getUsername(), sut.authenticate(creds).getUsername());
 	}
 
 	@Test
 	public void register() {
-		when(mopitory.findUserByUsername(user1.getUsername())).thenReturn(Optional.empty());
+		when(mopitory.findUserByEmail(user1.getEmail())).thenReturn(Optional.empty());
 		sut.register(user1);
 	}
 
