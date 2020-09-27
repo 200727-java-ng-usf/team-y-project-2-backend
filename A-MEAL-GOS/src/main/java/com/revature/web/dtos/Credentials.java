@@ -1,5 +1,9 @@
 package com.revature.web.dtos;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.models.AppUser;
+
 import java.util.Objects;
 
 /**
@@ -15,6 +19,12 @@ public class Credentials {
 	private String email;
 
 	public Credentials() {
+	}
+
+	public Credentials(AppUser user){
+		this.username = user.getUsername();
+		this.password = null;
+		this.email = user.getEmail();
 	}
 
 	public Credentials(String username, String password, String email) {
