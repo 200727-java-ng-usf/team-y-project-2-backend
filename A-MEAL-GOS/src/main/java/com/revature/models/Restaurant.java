@@ -20,8 +20,8 @@ public class Restaurant {
 	@Column(name = "restaurant_name", columnDefinition = "text")
 	private String name;
 
-	@Column(name = "maps_link", columnDefinition = "text")
-	private String mapURI;
+	@Column(name = "address", columnDefinition = "text")
+	private String address;
 	//endregion
 
 	//region Constructors
@@ -29,12 +29,12 @@ public class Restaurant {
 	public Restaurant() {
 	}
 
-	public Restaurant(int id, String place, String name, String mapURI) {
+	public Restaurant(int id, String place, String name, String address) {
 
 		this.id = id;
 		this.place = place;
 		this.name = name;
-		this.mapURI = mapURI;
+		this.address = address;
 	}
 	//endregion
 
@@ -65,12 +65,12 @@ public class Restaurant {
 		this.name = name;
 	}
 
-	public String getMapURI() {
-		return mapURI;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setMapURI(String mapURI) {
-		this.mapURI = mapURI;
+	public void setAddress(String address) {
+		this.address = address;
 	}
 	//endregion
 
@@ -84,12 +84,12 @@ public class Restaurant {
 		return id == that.id &&
 				Objects.equals(place, that.place) &&
 				Objects.equals(name, that.name) &&
-				Objects.equals(mapURI, that.mapURI);
+				Objects.equals(address, that.address);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, place, name, mapURI);
+		return Objects.hash(id, place, name, address);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class Restaurant {
 				"id=" + id +
 				", place='" + place + '\'' +
 				", name='" + name + '\'' +
-				", mapURI='" + mapURI + '\'' +
+				", address='" + address + '\'' +
 				'}';
 	}
 	//endregion
