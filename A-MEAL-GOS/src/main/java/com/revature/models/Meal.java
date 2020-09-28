@@ -59,6 +59,18 @@ public class Meal {
 		this.id = id;
 	}
 
+	public Meal( int numVotes, String mealName, List<Restaurant> restaurants) {
+		this.numVotes = numVotes;
+		this.mealName = mealName;
+		this.restaurants = restaurants;
+	}
+
+	public Meal(String mealName, List<Restaurant> restaurants) {
+		this.numVotes = 3;
+		this.mealName = mealName;
+		this.restaurants = restaurants;
+	}
+
 	public int getId() {
 
 		return id;
