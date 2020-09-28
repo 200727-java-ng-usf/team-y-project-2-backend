@@ -7,7 +7,6 @@ drop table if exists amg_meals;
 drop table if exists amg_restaurants;
 drop table if exists amg_users;
 
-
 create table amg_users( 
 	amg_user_id						serial not null, 
 	username 						varchar(255) not null,  -- username is not unique so that users can rename themselves / users can eeach have the same name, e.g., Daniel 
