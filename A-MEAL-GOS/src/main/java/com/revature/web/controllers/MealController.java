@@ -36,8 +36,12 @@ public class MealController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Meal createMeal(@RequestBody Meal meal) {
-        Meal newMeal = new Meal(meal.getNumVotes(), meal.getMealName(), meal.getRestaurants());
-        //TODO GET RESTAURANTS
+        Meal newMeal = new Meal();
+        if (meal.getNumVotes() == 0) {
+            newMeal = new Meal(meal.getNumVotes(), meal.getMealName(), meal.getRestaurants());
+        } else {
+            newMeal = new Meal(meal.getNumVotes(), meal.getMealName(), meal.getRestaurants());
+        }
         return mealService.create(newMeal);
     }
 }

@@ -133,7 +133,6 @@ public class MealService {
 	public boolean isMealValid(Meal Meal){
 		if(Meal == null) return false;
 		if(Meal.getMealName() == null || Meal.getMealName().trim().equals("")) return false;
-		if(Meal.getNumVotes() == 0) return false;
 		return true;
 	}
 	//endregion
