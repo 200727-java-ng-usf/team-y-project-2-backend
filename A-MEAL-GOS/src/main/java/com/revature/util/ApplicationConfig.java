@@ -84,7 +84,7 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		//	create: creates the schema, destroying previous data.
 		//	create-drop: drop the schema when the SessionFactory is closed explicitly, typically when the application is stopped.
 		//	none: does nothing with the schema, makes no changes to the database
-		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "validate");
+		hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop");
 //		hibernateProperties.setProperty(Environment.HBM2DDL_IMPORT_FILES, "import.sql");
 		return hibernateProperties;
 	}
