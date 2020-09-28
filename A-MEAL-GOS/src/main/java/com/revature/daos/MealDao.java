@@ -1,5 +1,6 @@
 package com.revature.daos;
 
+import com.revature.models.AppUser;
 import com.revature.models.Meal;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -170,11 +171,31 @@ public class MealDao implements CrudDao<Meal> {
 	}
 
 	/**
-	 * Returns an <code>{@link Optional}</code><<code>{@link Meal}</code>> with the given id.
-	 * @param id the id associated with the desired <code>{@link Meal}</code>
-	 * @return an <code>{@link Optional}</code><<code>{@link Meal}</code>> with the given id.
-	 * 			If none match the id, an <code>{@link Optional}</code>.empty() is returned.
+	 * Deletes an <code>{@link Meal}</code> by the <code>{@link Meal}</code>s name.
+	 * @param mealName the mealName of the <code>{@link Meal}</code> to delete.
+	 * @return true if the deletion was successful.
 	 */
+	public boolean deleteByMealname(String mealName) {
+		Session session = sessionFactory.getCurrentSession();
+		try {
+			Meal meal = session.load(Meal.class, mealName);
+			session.delete(mealName);
+			return true;
+		} catch (HibernateException he) {
+			he.printStackTrace();
+			return false;
+		}
+
+
+		/**
+		 * Returns an <code>{@link Optional}</code><<code>{@link Meal}</code>> with the given id.
+		 * @param id the id associated with the desired <code>{@link Meal}</code>
+		 * @return an <code>{@link Optional}</code><<code>{@link Meal}</code>> with the given id.
+		 * 			If none match the id, an <code>{@link Optional}</code>.empty() is returned.
+		 */
+
+	}
+
 	public Optional<Meal> findMealById(int id) {
 		Session session = sessionFactory.getCurrentSession();
 		return Optional.of(session.get(Meal.class, id)); // get returns null, load throws an error.
