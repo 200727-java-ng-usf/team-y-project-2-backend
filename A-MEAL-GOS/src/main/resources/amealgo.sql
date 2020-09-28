@@ -5,14 +5,15 @@ drop table if exists amg_meal_restaurants;
 drop table if exists amg_likes; 
 drop table if exists amg_meals; 
 drop table if exists amg_restaurants; 
-drop table if exists amg_users; 
+
 
 create table amg_users( 
 	amg_user_id						serial not null, 
 	username 						varchar(255) not null,  -- username is not unique so that users can rename themselves / users can eeach have the same name, e.g., Daniel 
 	password_hash					bytea not null, -- password is hashed for security with CSPRNG algorithm in java 
 	password_salt					bytea not null, -- password is salted prior to hashing for increased security 
-	email							varchar(255) unique not null, 
+	email							varchar(255) unique not null,
+	role                            varchar(255),
 	constraint user_id_pk 
 		primary key(amg_user_id) 
 ); 
