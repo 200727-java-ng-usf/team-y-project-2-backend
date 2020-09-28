@@ -4,7 +4,8 @@ drop table if exists amg_meal_users;
 drop table if exists amg_meal_restaurants; 
 drop table if exists amg_likes; 
 drop table if exists amg_meals; 
-drop table if exists amg_restaurants; 
+drop table if exists amg_restaurants;
+drop table if exists amg_users;
 
 
 create table amg_users( 
