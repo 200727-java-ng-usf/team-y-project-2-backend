@@ -216,7 +216,9 @@ public class UserDao implements CrudDao<AppUser> {
 	 */
 	public Optional<AppUser> findUserByUsername(String username) {
 		Session session = sessionFactory.getCurrentSession();
-		return Optional.of(session.get(AppUser.class, username)); // get returns null, load throws an error.
+		return Optional.ofNullable(session.createQuery("from AppUser au where au.username = :un", AppUser.class)
+				.setParameter("un", username)
+				.getSingleResult());
 	}
 
 	/**

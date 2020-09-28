@@ -3,6 +3,7 @@ package com.revature.services;
 import com.revature.daos.UserDao;
 import com.revature.exceptions.*;
 import com.revature.models.AppUser;
+import com.revature.models.Role;
 import com.revature.web.dtos.Credentials;
 import com.revature.web.dtos.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,6 +142,7 @@ public class UserService {
 		}
 
 		try{
+			newUser.setRole(Role.BASIC_USER);
 			userDao.save(newUser);
 		} catch(Exception e) {
 			throw new ResourcePersistenceException("Could not persist new AppUser!");
