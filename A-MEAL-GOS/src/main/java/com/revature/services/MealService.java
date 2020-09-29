@@ -1,9 +1,7 @@
 package com.revature.services;
 
 import com.revature.daos.MealDao;
-import com.revature.exceptions.AmealgoException;
-import com.revature.exceptions.InvalidRequestException;
-import com.revature.exceptions.ResourceNotFoundException;
+import com.revature.exceptions.*;
 import com.revature.models.Meal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,29 +21,28 @@ public class MealService {
 	private MealDao mealDao;
 
 	@Autowired
-	public MealService(MealDao mealDao){
-		this.mealDao = mealDao;
+	public MealService(MealDao MealDao){
+		this.mealDao = MealDao;
 	}
-
 
 	//region Methods
 
 	/**
-	 * Returns all restaurants registered within the database.
-	 * @return a Set of <code>{@link Meal}</code>s that have been registered and saved to the database
+	 * Returns all Meals registered with the bank database.
+	 * @return a Set of <code>{@link Meal}</code>s that have been registered and saved to the bank database
 	 */
 	@Transactional(readOnly = true)
 	public List<Meal> getAllMeals() throws ResourceNotFoundException {
-		List<Meal> users = new ArrayList<>();
+		List<Meal> Meals = new ArrayList<>();
 		try{
-			users = mealDao.findAll();
+			Meals = mealDao.findAll();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		if(users.isEmpty()){
+		if(Meals.isEmpty()){
 			throw new ResourceNotFoundException();
 		}
-		return users;
+		return Meals;
 	}
 
 	/**
@@ -60,40 +57,42 @@ public class MealService {
 		}
 
 		try{
-			return mealDao.findById(id).orElseThrow(ResourceNotFoundException::new);
-		} catch(Exception e) {
-			throw new AmealgoException(e);
-		}
-	}
-
-	/**
-	 * Returns the first <code>{@link Meal}</code> found with the given username.
-	 * @param name the String name to search by.
-	 * @return the first <code>{@link Meal}</code> found with the given name.
-	 */
-	@Transactional(readOnly = true)
-	public Meal getMealByName(String name){
-		if(name == null || name.equals("")){
-			throw new InvalidRequestException("Username cannot be null or empty.");
-		}
-		try{
-			return mealDao.findMealByName(name)
+			return mealDao.findById(id)
 					.orElseThrow(ResourceNotFoundException::new);
 		} catch(Exception e) {
 			throw new AmealgoException(e);
 		}
 	}
 
+	/**
+	 * This method registers a new <code>{@link Meal}</code> into the database.
+	 * @param newMeal the <code>{@link Meal}</code> to store/register in the database.
+	 */
+	@Transactional
+	public Meal create(Meal newMeal){
+
+		if(!isMealValid(newMeal)){
+			throw new InvalidRequestException("Invalid Meal field values provided during registration!");
+		}
+
+		try{
+			mealDao.save(newMeal);
+		} catch(Exception e) {
+			throw new ResourcePersistenceException("Could not persist new Meal!");
+		}
+
+		return newMeal;
+	}
 
 	/**
 	 * This method updates the records of a <code>{@link Meal}</code>
 	 * that exists on the database with the local record.
-	 * @param restaurant the <code>{@link Meal}</code> to update.
+	 * @param Meal the <code>{@link Meal}</code> to update.
 	 * @return returns true if the update was successful, false otherwise.
 	 */
 	@Transactional(readOnly = false)
-	public boolean updateMeal(Meal restaurant){
-		return mealDao.update(restaurant);
+	public boolean updateMeal(Meal Meal){
+		return mealDao.update(Meal);
 	}
 
 	/**
@@ -101,12 +100,38 @@ public class MealService {
 	 * the the database, along with any records only pertinent to them.
 	 * @param id the id of the <code>{@link Meal}</code>.
 	 * @return returns true if the deletion was successful, false if otherwise.
-	 * 		If there was no such user, returns true.
+	 * 		If there was no such Meal, returns true.
 	 */
+	//may not need....
 	@Transactional(readOnly = false)
 	public boolean deleteMealById(int id){
 		return mealDao.deleteById(id);
 	}
 
+	/**
+	 * This method deletes a <code>{@link Meal}</code> with the given id from
+	 * the the database, along with any records only pertinent to them.
+	 * @param Mealname the id of the <code>{@link Meal}</code>.
+	 * @return returns true if the deletion was successful, false if otherwise.
+	 * 		If there was no such Meal, returns true.
+	 */
+	@Transactional(readOnly = false)
+	public boolean deleteMealByMealname(String Mealname){
+		return mealDao.deleteByMealname(Mealname);
+	}
+
+
+	/**
+	 * Validates that the given <code>{@link Meal}</code> and its fields are
+	 * valid (not null or empty strings). Does not perform validation on id or Role fields.
+	 *
+	 * @param Meal the <code>{@link Meal}</code> to validate.
+	 * @return true if the <code>{@link Meal}</code> is valid.
+	 */
+	public boolean isMealValid(Meal Meal){
+		if(Meal == null) return false;
+		if(Meal.getMealName() == null || Meal.getMealName().trim().equals("")) return false;
+		return true;
+	}
 	//endregion
 }

@@ -25,6 +25,9 @@ import java.util.Objects;
 @Table(name = "amg_users", schema = "amealgos")
 public class AppUser {
 
+
+	//list of restaurants that this user likes (join table annotation)
+
 	//region Fields
 	/*
 	 * GenerationTypes
