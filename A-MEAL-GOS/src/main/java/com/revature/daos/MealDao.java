@@ -58,6 +58,7 @@ public class MealDao implements CrudDao<Meal> {
 	public Optional<Meal> findById(int id) {
 		Session session = sessionFactory.getCurrentSession();
 		return Optional.of(session.get(Meal.class, id));
+
 	}
 
 	/**
