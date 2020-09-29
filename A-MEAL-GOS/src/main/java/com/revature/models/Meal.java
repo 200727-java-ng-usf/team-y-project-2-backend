@@ -71,6 +71,15 @@ public class Meal {
 		this.restaurants = restaurants;
 	}
 
+	public Meal(int numVotes, String mealName) {
+		this.numVotes = numVotes;
+		this.mealName = mealName;
+	}
+
+	public Meal(String mealName) {
+		this.mealName = mealName;
+	}
+
 	public int getId() {
 
 		return id;
