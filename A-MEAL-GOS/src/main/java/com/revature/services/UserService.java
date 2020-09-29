@@ -97,13 +97,13 @@ public class UserService {
 	@Transactional
 	public Principal authenticate(Credentials credentials) throws AuthenticationException{
 		// Validate that the provided username and password are not non-values
-		if(credentials == null || credentials.getUsername() == null || credentials.getUsername().trim().equals("")
+		if(credentials == null || credentials.getEmail() == null || credentials.getEmail().trim().equals("")
 				|| credentials.getPassword() == null || credentials.getPassword().trim().equals("")){
 			throw new InvalidRequestException("Invalid credential values provided");
 		}
 
 		try{
-			AppUser user = userDao.findUserByUsername(credentials.getUsername())
+			AppUser user = userDao.findUserByEmail(credentials.getEmail())
 					.orElseThrow(AuthenticationException::new);
 			if(!user.validatePassword(
 					credentials.getPassword(),
