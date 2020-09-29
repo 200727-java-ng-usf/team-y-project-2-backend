@@ -1,9 +1,5 @@
 package com.revature.web.controllers;
 
-<<<<<<< HEAD
-public class MealController {
-}
-=======
 import com.revature.models.Meal;
 import com.revature.services.MealService;
 import com.revature.web.security.Secured;
@@ -53,4 +49,3 @@ public class MealController {
     }
 
 }
->>>>>>> 0800ca30217832ca6068d399905ec4bdacf32b94

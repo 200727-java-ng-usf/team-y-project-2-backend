@@ -1,8 +1,5 @@
 package com.revature.services;
 
-<<<<<<< HEAD
-public class MealService {
-=======
 import com.revature.daos.MealDao;
 import com.revature.exceptions.*;
 import com.revature.models.Meal;
@@ -137,5 +134,4 @@ public class MealService {
 		return true;
 	}
 	//endregion
->>>>>>> 0800ca30217832ca6068d399905ec4bdacf32b94
 }
