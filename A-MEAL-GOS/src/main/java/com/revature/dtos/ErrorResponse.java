@@ -1,4 +1,4 @@
-package com.revature.web.dtos;
+package com.revature.dtos;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

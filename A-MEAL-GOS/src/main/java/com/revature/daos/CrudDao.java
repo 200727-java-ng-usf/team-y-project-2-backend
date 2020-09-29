@@ -16,7 +16,7 @@ public interface CrudDao<T> {
 	 * Saves the given Type T to the database in the appropriate table(s)
 	 * @param t the Type {@link T} item to save.
 	 */
-	public abstract Optional<T> save(T t);
+	public abstract void save(T t);
 
 	/**
 	 * Returns all entries of Type T
