@@ -111,10 +111,36 @@ SELECT * FROM amg_users;
 -- +                    	  TEST DATA 
 -- +-------------------------------------------------------------+ 
 
+insert into amg_restaurants (address, restaurant_name, place_id)
+values
+	('a.klsdhf', 'a;lsdkjf', 'qweiory'),
+	('a.klsdf', 'alsdkjf', 'qeiory'),
+	('a.klshf', 'a;lsdkf', 'qwiory'),
+	('a.kldhf', 'a;lsdjf', 'qwory')
+	;
 
+insert into amg_users (email, password_hash, password_salt, role, username)
+values 
+	('someone@somewhere.com', 'a;sldkfja;sldkfj', 'alwkjefhsd;lkfjhaowi;ejfklnmsdvc', 'Admin', 'someone'),
+	('someone1@somewhere.com', 'a;asdcafd;sldkfj', 'alwkjefhsd;vdcsz;ejfklnmsdvc', 'Basic user', 'someone1'),
+	('someone2@somewhere.com', 'a;sldkfjawdawa;sldkfj', 'alwkjefhsd;awd;ejfklnmsdvc', 'Basic user', 'someone2'),
+	('someone3@somewhere.com', 'a;awd;sldkfj', 'alwkjefhsd;lkfjhaowicasca;ejfklnmsdvc', 'Basic user', 'someone3'),
+	('someone4@somewhere.com', 'a;wfdda;sldkfj', 'alwkjefhsd;lkfjhaawdfawdowi;ejfklnmsdvc', 'Basic user', 'someone4')
+	;
+
+insert into user_likes 
+values 
+	(1, 1),
+	(1, 2),
+	(2, 1),
+	(2, 2);
 
 -- +-------------------------------------------------------------+ 
 -- +                    	  TESTING 
 -- +-------------------------------------------------------------+ 
+
+select * from amg_users au ;
+select * from amg_restaurants;
+select * from user_likes ul ;
 
 

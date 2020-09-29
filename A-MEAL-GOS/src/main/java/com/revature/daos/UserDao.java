@@ -179,13 +179,13 @@ public class UserDao implements CrudDao<AppUser> {
 
 	/**
 	 * Deletes an <code>{@link AppUser}</code> by the <code>{@link AppUser}</code>s username.
-	 * @param username the username of the <code>{@link AppUser}</code> to delete.
+	 * @param email the username of the <code>{@link AppUser}</code> to delete.
 	 * @return true if the deletion was successful.
 	 */
-	public boolean deleteByUsername(String username) {
+	public boolean deleteByEmail(String email) {
 		Session session = sessionFactory.getCurrentSession();
 		try{
-			AppUser user = session.load(AppUser.class, username);
+			AppUser user = session.load(AppUser.class, email);
 			session.delete(user);
 			return true;
 		}catch(HibernateException he){
