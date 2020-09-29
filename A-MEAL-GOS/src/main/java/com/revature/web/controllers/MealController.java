@@ -22,7 +22,7 @@ public class MealController {
     }
 
     // produces is good practice to include.
-    @Secured(allowedRoles = {"Admin", "Manager"})
+//    @Secured(allowedRoles = {"Admin", "Manager"})
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Meal> getAllMeals() {
         return mealService.getAllMeals();
@@ -37,10 +37,11 @@ public class MealController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public int createMeal(@RequestBody Meal meal) {
         Meal newMeal = new Meal();
+
         if (meal.getNumVotes() == 0) {
-            newMeal = new Meal(meal.getNumVotes(), meal.getMealName(), meal.getRestaurants());
+            newMeal = new Meal(meal.getNumVotes(), meal.getMealName());
         } else {
-            newMeal = new Meal(meal.getNumVotes(), meal.getMealName(), meal.getRestaurants());
+            newMeal = new Meal(3, meal.getMealName());
         }
         mealService.create(newMeal);
 

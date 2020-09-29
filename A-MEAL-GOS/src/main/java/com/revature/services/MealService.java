@@ -3,8 +3,6 @@ package com.revature.services;
 import com.revature.daos.MealDao;
 import com.revature.exceptions.*;
 import com.revature.models.Meal;
-import com.revature.web.dtos.Credentials;
-import com.revature.web.dtos.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
