@@ -200,4 +200,9 @@ public class MealDao implements CrudDao<Meal> {
 		Session session = sessionFactory.getCurrentSession();
 		return Optional.of(session.get(Meal.class, id)); // get returns null, load throws an error.
 	}
+
+	public Meal findWinningVote() {
+		Session session = sessionFactory.getCurrentSession();
+		return null;
+	}
 }
