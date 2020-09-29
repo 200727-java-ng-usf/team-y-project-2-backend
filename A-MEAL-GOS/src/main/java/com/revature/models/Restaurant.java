@@ -22,6 +22,11 @@ public class Restaurant {
 
 	@Column(name = "address", columnDefinition = "text")
 	private String address;
+
+
+
+
+
 	//endregion
 
 	//region Constructors
