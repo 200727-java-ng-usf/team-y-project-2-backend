@@ -17,7 +17,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
@@ -245,13 +244,13 @@ public class UserServiceTest {
 
 	@Test
 	public void deleteUserByUsername() {
-		when(mopitory.deleteByUsername("LookAtMe1")).thenReturn(true);
+		when(mopitory.deleteByEmail("LookAtMe1")).thenReturn(true);
 		assertTrue(sut.deleteUserByUsername("LookAtMe1"));
 	}
 
 	@Test
 	public void noDeleteUserByUsername() {
-		when(mopitory.deleteByUsername("LookAtMe10")).thenReturn(false);
+		when(mopitory.deleteByEmail("LookAtMe10")).thenReturn(false);
 		assertFalse(sut.deleteUserByUsername("LookAtMe10"));
 	}
 

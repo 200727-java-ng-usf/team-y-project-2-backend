@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Models all services and operations that might apply to <code>{@link AppUser}</code>s.
@@ -31,12 +29,6 @@ public class UserService {
 		this.userDao = userDao;
 	}
 
-//region Constructors
-//	public UserService(UserDao repo){
-////		System.out.println("[LOG] - Instantiating " + this.getClass().getName());
-//		userDao = repo;
-//	}
-	//endregion
 
 	//region Methods
 
@@ -184,7 +176,7 @@ public class UserService {
 	 */
 	@Transactional(readOnly = false)
 	public boolean deleteUserByUsername(String username){
-		return userDao.deleteByUsername(username);
+		return userDao.deleteByEmail(username);
 	}
 
 	/**

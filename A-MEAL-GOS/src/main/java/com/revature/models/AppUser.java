@@ -8,6 +8,8 @@ import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.Objects;
 
 
@@ -67,6 +69,16 @@ public class AppUser {
 	private byte[] passwordSalt;
 	@Column(name="email", unique = true, nullable = false)
 	private String email;
+	@ManyToMany
+//	@JoinColumn(name = "user_likes")
+	@JoinTable(
+			name = "user_likes",
+			schema = "amealgos",
+			joinColumns = @JoinColumn(name = "amg_user_id"),
+			inverseJoinColumns = @JoinColumn(name = "amg_restaurant_id")
+	)
+	private Set<Restaurant> likes = new HashSet<>();
+
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	//endregion
@@ -88,6 +100,7 @@ public class AppUser {
 		this();
 		this.username = username;
 		this.email = email;
+		this.likes = new HashSet<>();
 	}
 	public AppUser(String username, String password, String email) {
 		this(username, email);
@@ -121,6 +134,16 @@ public class AppUser {
 
 	public AppUser(int id, String username, byte[] passwordHash, byte[] passwordSalt, String email, Role role) {
 		this(id, username, passwordHash, passwordSalt, email);
+		this.role = role;
+	}
+
+	public AppUser(int id, String username, byte[] passwordHash, byte[] passwordSalt, String email, Set<Restaurant> likes, Role role) {
+		this.id = id;
+		this.username = username;
+		this.passwordHash = passwordHash;
+		this.passwordSalt = passwordSalt;
+		this.email = email;
+		this.likes = likes;
 		this.role = role;
 	}
 
@@ -185,9 +208,26 @@ public class AppUser {
 	public void setRole(Role role) {
 		this.role = role;
 	}
+
+	public Set<Restaurant> getLikes() {
+		return likes;
+	}
+
+	public void setLikes(Set<Restaurant> likes) {
+		this.likes = likes;
+	}
+
 	//endregion
 
 	//region Methods
+
+	public void addLike(Restaurant like){
+		likes.add(like);
+	}
+
+	public void removeLike(Restaurant like){
+		likes.remove(like);
+	}
 
 	/**
 	 * Processes a given <code>{@link String}</code> into a password salt and hash.
@@ -241,7 +281,6 @@ public class AppUser {
 
 	//region OverRidden Methods
 
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -252,12 +291,13 @@ public class AppUser {
 				Arrays.equals(passwordHash, appUser.passwordHash) &&
 				Arrays.equals(passwordSalt, appUser.passwordSalt) &&
 				Objects.equals(email, appUser.email) &&
+				Objects.equals(likes, appUser.likes) &&
 				role == appUser.role;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(id, username, email, role);
+		int result = Objects.hash(id, username, email, likes, role);
 		result = 31 * result + Arrays.hashCode(passwordHash);
 		result = 31 * result + Arrays.hashCode(passwordSalt);
 		return result;
@@ -268,19 +308,21 @@ public class AppUser {
 		return "AppUser{" +
 				"id=" + id +
 				", username='" + username + '\'' +
+				", passwordHash=" + Arrays.toString(passwordHash) +
+				", passwordSalt=" + Arrays.toString(passwordSalt) +
 				", email='" + email + '\'' +
+				", likes=" + likes +
 				", role=" + role +
 				'}';
 	}
 
-	public String toString(boolean getPasswordData) {
-		if(!getPasswordData) return toString();
+	public String toString(boolean showPasswordHashAndSalt) {
+		if(showPasswordHashAndSalt) return toString();
 		return "AppUser{" +
 				"id=" + id +
 				", username='" + username + '\'' +
-				", passwordHash=" + Arrays.toString(passwordHash) +
-				", passwordSalt=" + Arrays.toString(passwordSalt) +
 				", email='" + email + '\'' +
+				", likes=" + likes +
 				", role=" + role +
 				'}';
 	}
