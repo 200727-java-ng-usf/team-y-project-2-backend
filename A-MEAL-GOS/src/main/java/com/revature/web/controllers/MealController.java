@@ -52,14 +52,14 @@ public class MealController {
         return newMeal.getId();
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Meal getWinner(HttpServletRequest req) {
-
-        HttpSession session = req.getSession();
-        Meal winningMeal = (Meal) session.getAttribute("mealId");
-
-        mealService.getWinningVote();
-        return null;
-    }
+//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+//    public Meal getWinner(HttpServletRequest req) {
+//
+//        HttpSession session = req.getSession();
+//        Meal winningMeal = (Meal) session.getAttribute("mealId");
+//
+//        mealService.getWinningVote();
+//        return null;
+//    }
 
 }
