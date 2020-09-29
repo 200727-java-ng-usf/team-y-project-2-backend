@@ -108,4 +108,22 @@ public class MealDao implements CrudDao<Meal> {
 				.setParameter("ml", mealName)
 				.getSingleResult());
 	}
+
+
+	/**
+	 * Deletes an <code>{@link Meal}</code> by the <code>{@link Meal}</code>s id.
+	 * @param mealname the id of the <code>{@link Meal}</code> to delete.
+	 * @return true if the deletion was successful.
+	 */
+	public boolean deleteByMealname(String mealname) {
+		Session session = sessionFactory.getCurrentSession();
+		try{
+			Meal meal = session.load(Meal.class, mealname);
+			session.delete(meal);
+			return true;
+		}catch(HibernateException he){
+			he.printStackTrace();
+			return false;
+		}
+	}
 }

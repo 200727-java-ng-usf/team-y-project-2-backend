@@ -111,9 +111,6 @@ SELECT * FROM amg_users;
 -- +                    	  TEST DATA 
 -- +-------------------------------------------------------------+ 
 
-select * from amg_restaurants;
-select * from user_likes ul ;
-
 insert into amg_restaurants (address, restaurant_name, place_id)
 values
 	('a.klsdhf', 'a;lsdkjf', 'qweiory'),
@@ -141,5 +138,9 @@ values
 -- +-------------------------------------------------------------+ 
 -- +                    	  TESTING 
 -- +-------------------------------------------------------------+ 
+
+select * from amg_users au ;
+select * from amg_restaurants;
+select * from user_likes ul ;
 
 

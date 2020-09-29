@@ -1,8 +1,7 @@
 package com.revature.models;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 import java.util.Objects;
 import java.util.Set;
 
@@ -60,13 +59,13 @@ public class Meal {
 		this.id = id;
 	}
 
-	public Meal( int numVotes, String mealName, List<Restaurant> restaurants) {
+	public Meal( int numVotes, String mealName, Set<Restaurant> restaurants) {
 		this.numVotes = numVotes;
 		this.mealName = mealName;
 		this.restaurants = restaurants;
 	}
 
-	public Meal(String mealName, List<Restaurant> restaurants) {
+	public Meal(String mealName, Set<Restaurant> restaurants) {
 		this.numVotes = 3;
 		this.mealName = mealName;
 		this.restaurants = restaurants;
