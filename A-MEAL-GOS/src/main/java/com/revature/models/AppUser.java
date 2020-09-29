@@ -75,7 +75,7 @@ public class AppUser {
 	@ManyToMany
 //	@JoinColumn(name = "user_likes")
 	@JoinTable(
-			name = "user_likes",
+			name = "amg_likes",
 			schema = "amealgos",
 			joinColumns = @JoinColumn(name = "amg_user_id"),
 			inverseJoinColumns = @JoinColumn(name = "amg_restaurant_id")
