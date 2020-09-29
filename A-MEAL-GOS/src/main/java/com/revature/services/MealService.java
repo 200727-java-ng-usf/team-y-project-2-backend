@@ -4,6 +4,7 @@ import com.revature.daos.MealDao;
 import com.revature.exceptions.*;
 import com.revature.models.AppUser;
 import com.revature.models.Meal;
+import com.revature.models.Restaurant;
 import com.revature.models.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -136,7 +137,8 @@ public class MealService {
 		return true;
 	}
 
-	public Vote getWinningVote() {
+	public Restaurant getWinningMeal() {
+		mealDao.findWinningRestaurant();
 		return null;
 	}
 	//endregion
