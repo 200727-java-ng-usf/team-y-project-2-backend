@@ -17,7 +17,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
@@ -133,7 +132,8 @@ public class UserServiceTest {
 		Credentials creds = Mockito.mock(Credentials.class);
 		when(creds.getUsername()).thenReturn("Mr.");
 		when(creds.getPassword()).thenReturn("password");
-		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
+		when(creds.getEmail()).thenReturn("mr.meseeks1@yessirree.org");
+		when(mopitory.findUserByEmail(creds.getEmail())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
 		Principal p = Mockito.mock(Principal.class);
 		when(p.getId()).thenReturn(1);
@@ -245,13 +245,13 @@ public class UserServiceTest {
 
 	@Test
 	public void deleteUserByUsername() {
-		when(mopitory.deleteByUsername("LookAtMe1")).thenReturn(true);
+		when(mopitory.deleteByEmail("LookAtMe1")).thenReturn(true);
 		assertTrue(sut.deleteUserByUsername("LookAtMe1"));
 	}
 
 	@Test
 	public void noDeleteUserByUsername() {
-		when(mopitory.deleteByUsername("LookAtMe10")).thenReturn(false);
+		when(mopitory.deleteByEmail("LookAtMe10")).thenReturn(false);
 		assertFalse(sut.deleteUserByUsername("LookAtMe10"));
 	}
 

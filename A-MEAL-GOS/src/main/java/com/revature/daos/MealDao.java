@@ -1,6 +1,5 @@
 package com.revature.daos;
 
-import com.revature.models.AppUser;
 import com.revature.models.Meal;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -30,13 +29,13 @@ public class MealDao implements CrudDao<Meal> {
 	}
 	/**
 	 * Saves the given <code>{@link Meal}</code> to the repository.
-	 * @param Meal the <code>{@link Meal}</code> to save to the repository
+	 * @param meal the <code>{@link Meal}</code> to save to the repository
 	 */
 	@Override
-	public Optional<Meal> save(Meal Meal) {
+	public Optional<Meal> save(Meal meal) {
 		Session session = sessionFactory.getCurrentSession();
-		session.save(Meal);
-		return Optional.of(Meal);
+		session.save(meal);
+		return Optional.of(meal);
 	}
 
 	/**
@@ -57,84 +56,26 @@ public class MealDao implements CrudDao<Meal> {
 	 */
 	@Override
 	public Optional<Meal> findById(int id) {
-		return findMealById(id);
+		Session session = sessionFactory.getCurrentSession();
+		return Optional.of(session.get(Meal.class, id));
+
 	}
 
 	/**
 	 * Returns true if a successful update occurs.
-	 * @param Meal the <code>{@link Meal}</code> to update.
+	 * @param meal the <code>{@link Meal}</code> to update.
 	 * @return true if update was successful.
 	 */
 	@Override
-	public boolean update(Meal Meal) {
+	public boolean update(Meal meal) {
 		Session session = sessionFactory.getCurrentSession();
 		try{
-			session.update(Meal);
+			session.update(meal);
 			return true;
 		}catch(HibernateException he){
 			he.printStackTrace();
 			return false;
 		}
-
-		//TODO move to mealService
-//		try (Session session = Objects.requireNonNull(sessionFactory).openSession()) {
-//			tx = session.beginTransaction();
-////			session.update(Meal);
-//			String hql = "update Meal au ";
-//			hql += "set au.active = :active, ";
-//
-//			// id
-//			// active
-//			// firstName
-//			// lastName
-//			// username
-//			// passwordHash
-//			// passwordSalt
-//			// email
-//			// role
-//
-//			if(Meal.getUsername() != null && !Meal.getUsername().trim().equals("")){
-//				System.out.println("username present.");
-//				hql += "au.username = :username, ";
-//			}
-//			if(Meal.getPasswordHash() != null && Meal.getPasswordHash().length > 0){
-//				System.out.println("passwordHash present.");
-//				hql += "au.passwordHash = :passwordHash, ";
-//			}
-//			if(Meal.getPasswordSalt() != null && Meal.getPasswordSalt().length > 0){
-//				System.out.println("passwordSalt present.");
-//				hql += "au.passwordSalt = :passwordSalt, ";
-//			}
-//			if(Meal.getEmail() != null && !Meal.getEmail().trim().equals("")){
-//				System.out.println("email present.");
-//				hql += "au.email = :email, ";
-//			}
-//			hql += "where au.id = :id ";
-//			Query query = session.createQuery(hql);
-//
-//			if(Meal.getUsername() != null && !Meal.getUsername().trim().equals("")) {
-//				query.setParameter("username", Meal.getUsername());
-//			}
-//			if(Meal.getPasswordHash() != null && Meal.getPasswordHash().length > 0) {
-//				query.setParameter("passwordHash", Meal.getPasswordHash());
-//			}
-//			if(Meal.getPasswordSalt() != null && Meal.getPasswordSalt().length > 0) {
-//				query.setParameter("passwordSalt", Meal.getPasswordSalt());
-//			}
-//			if(Meal.getEmail() != null && !Meal.getEmail().trim().equals("")) {
-//				query.setParameter("email", Meal.getEmail());
-//			}
-//
-//			query.setParameter("id", Meal.getId());
-//			int result = query.executeUpdate();
-//			if(result <= 0) return false;
-//			tx.commit();
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			if(tx != null) tx.rollback();
-//			return false;
-//		}
-//		return true;
 	}
 
 	/**
@@ -142,63 +83,48 @@ public class MealDao implements CrudDao<Meal> {
 	 * @param id the id of the <code>{@link Meal}</code> to delete.
 	 * @return true if the deletion was successful.
 	 */
-	//may not use...
 	@Override
 	public boolean deleteById(int id) {
 		Session session = sessionFactory.getCurrentSession();
 		try{
-			Meal user = session.load(Meal.class, id);
-			session.delete(user);
+			Meal meal = session.load(Meal.class, id);
+			session.delete(meal);
 			return true;
 		}catch(HibernateException he){
 			he.printStackTrace();
 			return false;
 		}
-		//move to mealservice
-//		try (Session session = Objects.requireNonNull(sessionFactory).openSession()) {
-//			tx = session.beginTransaction();
-//			Query query = session.createQuery("delete Meal au where au.id = :id ")
-//					.setParameter("id", id);
-//			int result = query.executeUpdate();
-//			if(result <= 0) return false;
-//			tx.commit();
-//		} catch(Exception e) {
-//			e.printStackTrace();
-//			if(tx != null) tx.rollback();
-//			return false;
-//		}
-//		return true;
 	}
 
 	/**
-	 * Deletes an <code>{@link Meal}</code> by the <code>{@link Meal}</code>s name.
-	 * @param mealName the mealName of the <code>{@link Meal}</code> to delete.
+	 * Returns an <code>{@link Optional}</code><<code>{@link Meal}</code>> with the given name.
+	 * @param mealName the name associated with the desired <code>{@link Meal}</code>
+	 * @return an <code>{@link Optional}</code><<code>{@link Meal}</code>> with the given name.
+	 * 			If none match the name, an <code>{@link Optional}</code>.empty() is returned.
+	 */
+	public Optional<Meal> findMealByName(String mealName) {
+		Session session = sessionFactory.getCurrentSession();
+		return Optional.ofNullable(session.createQuery("from Meal ml where ml.mealName = :ml", Meal.class)
+				.setParameter("ml", mealName)
+				.getSingleResult());
+	}
+
+
+	/**
+	 * Deletes an <code>{@link Meal}</code> by the <code>{@link Meal}</code>s id.
+	 * @param mealname the id of the <code>{@link Meal}</code> to delete.
 	 * @return true if the deletion was successful.
 	 */
-	public boolean deleteByMealname(String mealName) {
+	public boolean deleteByMealname(String mealname) {
 		Session session = sessionFactory.getCurrentSession();
-		try {
-			Meal meal = session.load(Meal.class, mealName);
-			session.delete(mealName);
+		try{
+			Meal meal = session.load(Meal.class, mealname);
+			session.delete(meal);
 			return true;
-		} catch (HibernateException he) {
+		}catch(HibernateException he){
 			he.printStackTrace();
 			return false;
 		}
-
-
-		/**
-		 * Returns an <code>{@link Optional}</code><<code>{@link Meal}</code>> with the given id.
-		 * @param id the id associated with the desired <code>{@link Meal}</code>
-		 * @return an <code>{@link Optional}</code><<code>{@link Meal}</code>> with the given id.
-		 * 			If none match the id, an <code>{@link Optional}</code>.empty() is returned.
-		 */
-
-	}
-
-	public Optional<Meal> findMealById(int id) {
-		Session session = sessionFactory.getCurrentSession();
-		return Optional.of(session.get(Meal.class, id)); // get returns null, load throws an error.
 	}
 
 	public Meal findWinningVote() {
