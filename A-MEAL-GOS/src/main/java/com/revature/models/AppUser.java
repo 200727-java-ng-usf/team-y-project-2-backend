@@ -20,23 +20,58 @@ import java.util.Objects;
  * email
  */
 @Entity
-@Table(name = "amealgo.ers_users")
+@Table(name = "amg_users", schema = "amealgos")
 public class AppUser {
 
+
+	//list of restaurants that this user likes (join table annotation)
+
 	//region Fields
+	/*
+	 * GenerationTypes
+	 * 		AUTO
+	 * 			Default.
+	 * 		IDENTITY
+	 * 			Uses auto-incrementing value
+	 * 		SEQUENCE
+	 * 			Hibernate provides the SequenceStyleGenerator class.
+	 * 				This class uses sequences if they're supported by the database, and switches to Table if not.
+	 * 			Requires the use of the @GenericGenerator tag:
+	 * 				@GenericGenerator(
+						name = "sequence-generator",
+						strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+						parameters = {
+							@Parameter(name = "sequence_name", value = "user_sequence"),
+							@Parameter(name = "initial_value", value = "4"),
+							@Parameter(name = "increment_size", value = "1")
+						}
+					)
+	 * 		TABLE
+	 * 			Uses underlying database table that holds segments of identifier generation values.
+	 * 				@GeneratedValue(strategy = GenerationType.TABLE,
+						generator = "table-generator")
+					@TableGenerator(name = "table-generator",
+						table = "dep_ids",
+						pkColumnName = "seq_id",
+						valueColumnName = "seq_value")
+	 * 			This method does not scale well and can negatively affect performance.
+	 *
+	 */
 	@Id
 	@Column(name="amg_user_id")
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@Column(name="username")
+	@Column(name="username", nullable = false)
 	private String username;
 
-	@Column(name="password_hash")
+	@Column(name="password_hash", nullable = false)
 	private byte[] passwordHash;
-	@Column(name="password_salt")
+	@Column(name="password_salt", nullable = false)
 	private byte[] passwordSalt;
-	@Column(name="email")
+	@Column(name="email", unique = true, nullable = false)
 	private String email;
+	@Enumerated(EnumType.STRING)
+	private Role role;
 	//endregion
 
 	//region Constructors
@@ -67,6 +102,19 @@ public class AppUser {
 		this.id = id;
 	}
 
+	public AppUser(String username, String email, Role role) {
+		this(username, email);
+		this.role = role;
+	}
+	public AppUser(String username, String password, String email, Role role) {
+		this(username, password, email);
+		this.role = role;
+	}
+	public AppUser(int id, String username, String password, String email, Role role) {
+		this(id, username, password, email);
+		this.role = role;
+	}
+
 	private AppUser(int id, String username, byte[] passwordHash, byte[] passwordSalt, String email) {
 		this(username, email);
 		this.id = id;
@@ -74,8 +122,13 @@ public class AppUser {
 		this.passwordSalt = passwordSalt;
 	}
 
+	public AppUser(int id, String username, byte[] passwordHash, byte[] passwordSalt, String email, Role role) {
+		this(id, username, passwordHash, passwordSalt, email);
+		this.role = role;
+	}
+
 	public AppUser(AppUser user){
-		this(user.id, user.username, user.passwordHash, user.passwordSalt, user.email);
+		this(user.id, user.username, user.passwordHash, user.passwordSalt, user.email, user.role);
 	}
 	//endregion
 
@@ -126,6 +179,14 @@ public class AppUser {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	//endregion
 
@@ -183,6 +244,7 @@ public class AppUser {
 
 	//region OverRidden Methods
 
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -192,12 +254,13 @@ public class AppUser {
 				Objects.equals(username, appUser.username) &&
 				Arrays.equals(passwordHash, appUser.passwordHash) &&
 				Arrays.equals(passwordSalt, appUser.passwordSalt) &&
-				Objects.equals(email, appUser.email);
+				Objects.equals(email, appUser.email) &&
+				role == appUser.role;
 	}
 
 	@Override
 	public int hashCode() {
-		int result = Objects.hash(id, username, email);
+		int result = Objects.hash(id, username, email, role);
 		result = 31 * result + Arrays.hashCode(passwordHash);
 		result = 31 * result + Arrays.hashCode(passwordSalt);
 		return result;
@@ -209,6 +272,7 @@ public class AppUser {
 				"id=" + id +
 				", username='" + username + '\'' +
 				", email='" + email + '\'' +
+				", role=" + role +
 				'}';
 	}
 
@@ -220,6 +284,7 @@ public class AppUser {
 				", passwordHash=" + Arrays.toString(passwordHash) +
 				", passwordSalt=" + Arrays.toString(passwordSalt) +
 				", email='" + email + '\'' +
+				", role=" + role +
 				'}';
 	}
 

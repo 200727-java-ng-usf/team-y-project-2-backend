@@ -50,3 +50,7 @@ buildNumber.properties
 */.project
 */.settings
 */.factorypath
+
+#auto-generated operating system files
+#mac
+.DS_Store
