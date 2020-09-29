@@ -1,6 +1,7 @@
 package com.revature.daos;
 
 import com.revature.models.Meal;
+import com.revature.models.Restaurant;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -127,8 +128,13 @@ public class MealDao implements CrudDao<Meal> {
 		}
 	}
 
-	public Meal findWinningVote() {
+	public Restaurant findWinningRestaurant() {
 		Session session = sessionFactory.getCurrentSession();
+		try {
+			return null;
+		} catch (HibernateException he) {
+			he.printStackTrace();
+		}
 		return null;
 	}
 }
