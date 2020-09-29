@@ -132,7 +132,8 @@ public class UserServiceTest {
 		Credentials creds = Mockito.mock(Credentials.class);
 		when(creds.getUsername()).thenReturn("Mr.");
 		when(creds.getPassword()).thenReturn("password");
-		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
+		when(creds.getEmail()).thenReturn("mr.meseeks1@yessirree.org");
+		when(mopitory.findUserByEmail(creds.getEmail())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
 		Principal p = Mockito.mock(Principal.class);
 		when(p.getId()).thenReturn(1);
