@@ -2,6 +2,7 @@ package com.revature.web.controllers;
 
 import com.revature.models.AppUser;
 import com.revature.models.Meal;
+import com.revature.models.Restaurant;
 import com.revature.models.Vote;
 import com.revature.services.MealService;
 import com.revature.web.security.Secured;
@@ -27,10 +28,10 @@ public class MealController {
 
     // produces is good practice to include.
 //    @Secured(allowedRoles = {"Admin", "Manager"})
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Meal> getAllMeals() {
-        return mealService.getAllMeals();
-    }
+//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+//    public List<Meal> getAllMeals() {
+//        return mealService.getAllMeals();
+//    }
 
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Meal getMealById(@PathVariable int id) {
@@ -52,14 +53,14 @@ public class MealController {
         return newMeal.getId();
     }
 
-//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-//    public Meal getWinner(HttpServletRequest req) {
-//
-//        HttpSession session = req.getSession();
-//        Meal winningMeal = (Meal) session.getAttribute("mealId");
-//
-//        mealService.getWinningVote();
-//        return null;
-//    }
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public Restaurant getWinner(HttpServletRequest req) {
+
+        //HttpSession session = req.getSession();
+        //Restaurant winningMeal = (Restaurant) session.getAttribute("mealId");
+
+        Restaurant winningRestaurant = mealService.getWinningMeal();
+        return null;
+    }
 
 }
