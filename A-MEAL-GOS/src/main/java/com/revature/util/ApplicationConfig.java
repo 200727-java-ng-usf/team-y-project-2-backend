@@ -46,6 +46,13 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 	@Bean
 	public BasicDataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
+		if(dbDriver == null || dbDriver.isEmpty()){
+			dbDriver = System.getProperty("db.driver");
+			dbSchema = System.getProperty("db.schema");
+			dbUrl = System.getProperty("db.url");
+			dbUsername = System.getProperty("db.username");
+			dbPassword = System.getProperty("db.password");
+		}
 		dataSource.setDriverClassName(dbDriver);
 		dataSource.setUrl(dbUrl);
 		dataSource.setDefaultSchema(dbSchema);
