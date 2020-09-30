@@ -46,6 +46,13 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 	@Bean
 	public BasicDataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
+		if(dbDriver == null || dbDriver.isEmpty()){
+			dbDriver = System.getProperty("db.driver");
+			dbSchema = System.getProperty("db.schema");
+			dbUrl = System.getProperty("db.url");
+			dbUsername = System.getProperty("db.username");
+			dbPassword = System.getProperty("db.password");
+		}
 		dataSource.setDriverClassName(dbDriver);
 		dataSource.setUrl(dbUrl);
 		dataSource.setDefaultSchema(dbSchema);
@@ -82,7 +89,8 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		//	create-drop: drop the schema when the SessionFactory is closed explicitly, typically when the application is stopped.
 		//	none: does nothing with the schema, makes no changes to the database
 //		hibernateProperties.setProperty(Environment.HBM2DDL_AUTO, "validate");
-//		hibernateProperties.setProperty(Environment.HBM2DDL_IMPORT_FILES, "import.sql");
+		hibernateProperties.setProperty(Environment.HBM2DDL_IMPORT_FILES, "import.sql");
+
 		return hibernateProperties;
 	}
 
