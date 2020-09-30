@@ -137,9 +137,8 @@ public class MealService {
 		return true;
 	}
 
-	public Restaurant getWinningMeal() {
-		mealDao.findWinningRestaurant();
-		return null;
+	public Restaurant getWinningMeal(Integer winner) {
+		return mealDao.findWinningRestaurant(winner);
 	}
 	//endregion
 }

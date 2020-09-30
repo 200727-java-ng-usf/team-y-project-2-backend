@@ -56,10 +56,11 @@ public class MealController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public Restaurant getWinner(HttpServletRequest req) {
 
-        //HttpSession session = req.getSession();
-        //Restaurant winningMeal = (Restaurant) session.getAttribute("mealId");
+        HttpSession session = req.getSession();
+        Integer winner = (Integer) session.getAttribute("mealId");
 
-        Restaurant winningRestaurant = mealService.getWinningMeal();
+
+        Restaurant winningRestaurant = mealService.getWinningMeal(winner);
         return null;
     }
 
