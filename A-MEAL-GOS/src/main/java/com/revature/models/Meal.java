@@ -3,7 +3,6 @@ package com.revature.models;
 import javax.persistence.*;
 import java.util.Set;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "amg_meals", schema = "amealgos")
@@ -40,7 +39,7 @@ public class Meal {
 			joinColumns = @JoinColumn(name = "amg_meal_id"),
 			inverseJoinColumns = @JoinColumn(name = "amg_user_id")
 	)
-	private Set<AppUser> voted;
+	private Set<AppUser> usersInMeal;
 	//endregion
 
 	public Meal() {
@@ -51,7 +50,7 @@ public class Meal {
 		this.mealName = mealName;
 		this.finalRestaurant = finalRestaurant;
 		this.restaurants = restaurants;
-		this.voted = voted;
+		this.usersInMeal = voted;
 	}
 
 	public Meal(int id, int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> voted) {
@@ -121,12 +120,12 @@ public class Meal {
 		this.restaurants = restaurants;
 	}
 
-	public Set<AppUser> getVoted() {
-		return voted;
+	public Set<AppUser> getUsersInMeal() {
+		return usersInMeal;
 	}
 
-	public void setVoted(Set<AppUser> voted) {
-		this.voted = voted;
+	public void setUsersInMeal(Set<AppUser> usersInMeal) {
+		this.usersInMeal = usersInMeal;
 	}
 
 	@Override
@@ -139,12 +138,12 @@ public class Meal {
 				Objects.equals(mealName, meal.mealName) &&
 				Objects.equals(finalRestaurant, meal.finalRestaurant) &&
 				Objects.equals(restaurants, meal.restaurants) &&
-				Objects.equals(voted, meal.voted);
+				Objects.equals(usersInMeal, meal.usersInMeal);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, numVotes, mealName, finalRestaurant, restaurants, voted);
+		return Objects.hash(id, numVotes, mealName, finalRestaurant, restaurants, usersInMeal);
 	}
 
 	@Override
@@ -155,7 +154,7 @@ public class Meal {
 				", mealName='" + mealName + '\'' +
 				", finalRestaurant='" + finalRestaurant + '\'' +
 				", restaurants=" + restaurants +
-				", voted=" + voted +
+				", voted=" + usersInMeal +
 				'}';
 	}
 }

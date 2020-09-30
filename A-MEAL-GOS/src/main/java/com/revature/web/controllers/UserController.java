@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 // @RestController
@@ -48,6 +50,9 @@ public class UserController {
 		AppUser newUser = new AppUser(creds.getUsername(), creds.getPassword(), creds.getEmail());
 		return userService.register(newUser);
 	}
+
+
+
 
 
 

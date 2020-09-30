@@ -1,7 +1,11 @@
 package com.revature.web.controllers;
 
+import com.revature.models.AppUser;
 import com.revature.models.Meal;
 import com.revature.services.MealService;
+import com.revature.services.UserService;
+import com.revature.web.dtos.Credentials;
+import com.revature.web.dtos.Principal;
 import com.revature.web.security.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,10 +21,12 @@ import java.util.List;
 public class MealController {
 
     private MealService mealService;
+    private UserService userService;
 
     @Autowired
-    public MealController(MealService service) {
+    public MealController(MealService service, UserService service1) {
         this.mealService = service;
+        this.userService = service1;
     }
 
     // produces is good practice to include.
@@ -37,11 +43,18 @@ public class MealController {
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PostMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public int setMealById(@PathVariable int id, HttpServletRequest req) {
+    public int setMealById(@RequestBody Credentials creds, @PathVariable int id, HttpServletRequest req) {
         int mealId = id;
         HttpSession userSession = req.getSession();
         userSession.setAttribute("mealId", mealId);
+        AppUser currentUser = userService.getUserByUsername(creds.getUsername());
+        System.out.println(currentUser);
+        Meal currentMeal = mealService.getMealById(mealId);
+
+
+        mealService.addToMeal(currentUser, currentMeal);
         return mealId;
+
     }
 
     @ResponseStatus(HttpStatus.CREATED)

@@ -215,6 +215,7 @@ public class UserService {
 		}
 	}
 
+
 	/**
 	 * Validates that the given <code>{@link AppUser}</code> and its fields are
 	 * valid (not null or empty strings). Does not perform validation on id or Role fields.
