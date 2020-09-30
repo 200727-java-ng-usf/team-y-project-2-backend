@@ -166,6 +166,21 @@ values
 	(4, 5)
 ;
 
+INSERT INTO amg_meals (final_restaurant_id, meal_name, num_votes)
+VALUES 
+	('qwiory', 'First Meal', 2)
+	;
+
+INSERT INTO amg_votes (amg_vote, vote_meal_id, restaurant_id, amg_user_id)
+VALUES 
+	(1, 1, 1, 1),
+	(1, 1, 2, 1),
+	(1, 1, 3, 1),
+	(1, 1, 1, 2),
+	(0, 1, 2, 2),
+	(0, 1, 3, 2)
+	;
+
 -- +-------------------------------------------------------------+ 
 -- +                    	  TESTING 
 -- +-------------------------------------------------------------+ 
@@ -177,5 +192,27 @@ select * from amg_likes;
 select * from amg_meals; 
 select * from amg_restaurants;
 select * from amg_users;
+
+
+
+-- Custom query for getting winning restaurant of a vote
+SELECT
+    SUM (av.amg_vote) AS total,
+    ar.restaurant_name,
+    ar.address
+FROM
+    amg_votes av
+JOIN 
+	amg_restaurants ar
+ON 
+	av.restaurant_id = ar.amg_restaurant_id 
+WHERE 
+	av.vote_meal_id = 1
+GROUP BY
+    av.restaurant_id,
+    ar.restaurant_name,
+    ar.address
+ORDER BY total DESC;
+LIMIT 5;
 
 

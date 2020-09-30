@@ -40,3 +40,18 @@ insert into amg_likes values (2, 2);
 insert into amg_likes values (3, 1);
 insert into amg_likes values (3, 2);
 insert into amg_likes values (4, 5);
+
+INSERT INTO amg_meals (final_restaurant_id, meal_name, num_votes)
+VALUES 
+	('qwiory', 'First Meal', 2)
+	;
+
+INSERT INTO amg_votes (amg_vote, vote_meal_id, restaurant_id, amg_user_id)
+VALUES 
+	(1, 1, 1, 1),
+	(1, 1, 2, 1),
+	(1, 1, 3, 1),
+	(1, 1, 1, 2),
+	(0, 1, 2, 2),
+	(0, 1, 3, 2)
+	;
