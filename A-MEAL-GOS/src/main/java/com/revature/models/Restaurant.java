@@ -22,6 +22,11 @@ public class Restaurant {
 
 	@Column(name = "address", columnDefinition = "text")
 	private String address;
+
+
+
+
+
 	//endregion
 
 	//region Constructors
@@ -29,12 +34,16 @@ public class Restaurant {
 	public Restaurant() {
 	}
 
-	public Restaurant(int id, String place, String name, String address) {
+	public Restaurant(String place, String name, String address) {
 
-		this.id = id;
 		this.place = place;
 		this.name = name;
 		this.address = address;
+	}
+
+	public Restaurant(int id, String place, String name, String address) {
+		this(place, name, address);
+		this.id = id;
 	}
 	//endregion
 

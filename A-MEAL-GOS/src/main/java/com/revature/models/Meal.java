@@ -1,9 +1,9 @@
 package com.revature.models;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "amg_meals", schema = "amealgos")
@@ -24,14 +24,14 @@ public class Meal {
 	@Column(name = "final_restaurant_id", columnDefinition = "text")
 	private String finalRestaurant;
 
-	@OneToMany()
+	@OneToMany
 	@JoinTable(
 			name = "amg_meal_restaurants",
 			schema = "amealgos",
 			joinColumns = @JoinColumn(name = "amg_meal_id"),
 			inverseJoinColumns = @JoinColumn(name = "amg_restaurant_id")
 	)
-	private List<Restaurant> restaurants;
+	private Set<Restaurant> restaurants;
 
 	@OneToMany
 	@JoinTable(
@@ -40,13 +40,13 @@ public class Meal {
 			joinColumns = @JoinColumn(name = "amg_meal_id"),
 			inverseJoinColumns = @JoinColumn(name = "amg_user_id")
 	)
-	private List<AppUser> voted;
+	private Set<AppUser> voted;
 	//endregion
 
 	public Meal() {
 	}
 
-	public Meal(int numVotes, String mealName, String finalRestaurant, List<Restaurant> restaurants, List<AppUser> voted) {
+	public Meal(int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> voted) {
 		this.numVotes = numVotes;
 		this.mealName = mealName;
 		this.finalRestaurant = finalRestaurant;
@@ -54,9 +54,30 @@ public class Meal {
 		this.voted = voted;
 	}
 
-	public Meal(int id, int numVotes, String mealName, String finalRestaurant, List<Restaurant> restaurants, List<AppUser> voted) {
+	public Meal(int id, int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> voted) {
 		this(numVotes, mealName, finalRestaurant, restaurants, voted);
 		this.id = id;
+	}
+
+	public Meal( int numVotes, String mealName, Set<Restaurant> restaurants) {
+		this.numVotes = numVotes;
+		this.mealName = mealName;
+		this.restaurants = restaurants;
+	}
+
+	public Meal(String mealName, Set<Restaurant> restaurants) {
+		this.numVotes = 3;
+		this.mealName = mealName;
+		this.restaurants = restaurants;
+	}
+
+	public Meal(int numVotes, String mealName) {
+		this.numVotes = numVotes;
+		this.mealName = mealName;
+	}
+
+	public Meal(String mealName) {
+		this.mealName = mealName;
 	}
 
 	public int getId() {
@@ -92,19 +113,19 @@ public class Meal {
 		this.finalRestaurant = finalRestaurant;
 	}
 
-	public List<Restaurant> getRestaurants() {
+	public Set<Restaurant> getRestaurants() {
 		return restaurants;
 	}
 
-	public void setRestaurants(List<Restaurant> restaurants) {
+	public void setRestaurants(Set<Restaurant> restaurants) {
 		this.restaurants = restaurants;
 	}
 
-	public List<AppUser> getVoted() {
+	public Set<AppUser> getVoted() {
 		return voted;
 	}
 
-	public void setVoted(List<AppUser> voted) {
+	public void setVoted(Set<AppUser> voted) {
 		this.voted = voted;
 	}
 

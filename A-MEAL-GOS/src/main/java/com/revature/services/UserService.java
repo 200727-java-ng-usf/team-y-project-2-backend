@@ -12,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Models all services and operations that might apply to <code>{@link AppUser}</code>s.
@@ -31,12 +29,6 @@ public class UserService {
 		this.userDao = userDao;
 	}
 
-//region Constructors
-//	public UserService(UserDao repo){
-////		System.out.println("[LOG] - Instantiating " + this.getClass().getName());
-//		userDao = repo;
-//	}
-	//endregion
 
 	//region Methods
 
@@ -105,13 +97,13 @@ public class UserService {
 	@Transactional
 	public Principal authenticate(Credentials credentials) throws AuthenticationException{
 		// Validate that the provided username and password are not non-values
-		if(credentials == null || credentials.getUsername() == null || credentials.getUsername().trim().equals("")
+		if(credentials == null || credentials.getEmail() == null || credentials.getEmail().trim().equals("")
 				|| credentials.getPassword() == null || credentials.getPassword().trim().equals("")){
 			throw new InvalidRequestException("Invalid credential values provided");
 		}
 
 		try{
-			AppUser user = userDao.findUserByUsername(credentials.getUsername())
+			AppUser user = userDao.findUserByEmail(credentials.getEmail())
 					.orElseThrow(AuthenticationException::new);
 			if(!user.validatePassword(
 					credentials.getPassword(),
@@ -184,7 +176,7 @@ public class UserService {
 	 */
 	@Transactional(readOnly = false)
 	public boolean deleteUserByUsername(String username){
-		return userDao.deleteByUsername(username);
+		return userDao.deleteByEmail(username);
 	}
 
 	/**
