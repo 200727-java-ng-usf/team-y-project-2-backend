@@ -5,6 +5,7 @@ import com.revature.models.Meal;
 import com.revature.models.Restaurant;
 import com.revature.models.Vote;
 import com.revature.services.MealService;
+import com.revature.web.dtos.ResultDto;
 import com.revature.web.security.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,13 +55,14 @@ public class MealController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Restaurant getWinner(HttpServletRequest req) {
+    public ResultDto getWinner(HttpServletRequest req) {
 
-        HttpSession session = req.getSession();
-        Integer winner = (Integer) session.getAttribute("mealId");
+//        HttpSession session = req.getSession();
+//        Integer winner = (Integer) session.getAttribute("mealId");
+        int winner = 1;
 
 
-        Restaurant winningRestaurant = mealService.getWinningMeal(winner);
+        ResultDto winningRestaurant = mealService.getWinningMeal(winner);
         return null;
     }
 

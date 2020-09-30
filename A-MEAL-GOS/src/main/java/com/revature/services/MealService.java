@@ -6,6 +6,7 @@ import com.revature.models.AppUser;
 import com.revature.models.Meal;
 import com.revature.models.Restaurant;
 import com.revature.models.Vote;
+import com.revature.web.dtos.ResultDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -137,7 +138,8 @@ public class MealService {
 		return true;
 	}
 
-	public Restaurant getWinningMeal(Integer winner) {
+	@Transactional(readOnly = true)
+	public ResultDto getWinningMeal(Integer winner) {
 		return mealDao.findWinningRestaurant(winner);
 	}
 	//endregion

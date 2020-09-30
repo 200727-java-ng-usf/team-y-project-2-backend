@@ -4,6 +4,7 @@ import com.revature.models.AppUser;
 import com.revature.models.Meal;
 import com.revature.models.Restaurant;
 import com.revature.models.Vote;
+import com.revature.web.dtos.ResultDto;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -130,10 +131,33 @@ public class MealDao implements CrudDao<Meal> {
 		}
 	}
 
-	public Restaurant findWinningRestaurant(Integer winner) {
+	public ResultDto findWinningRestaurant(Integer winner) {
 		Session session = sessionFactory.getCurrentSession();
 		try {
 			//Restaurant winningRestaurant = session.createQuery();
+			ResultDto winningRest = (ResultDto) session.createQuery(
+					"SELECT " +
+					"av.restaurant_id, " +
+					"SUM (av.amg_vote) AS total, " +
+					"ar.restaurant_name, " +
+					"ar.address " +
+					"FROM " +
+					"amg_votes av " +
+					"JOIN " +
+					"amg_restaurants ar " +
+					"ON " +
+					"av.restaurant_id = ar.amg_restaurant_id " +
+					"WHERE " +
+					"av.vote_meal_id = :id " +
+					"GROUP BY " +
+					"av.restaurant_id, " +
+					"ar.restaurant_name, " +
+					"ar.address " +
+					"ORDER BY total DESC", ResultDto.class)
+					.setParameter("id", winner)
+					.getSingleResult();
+			System.out.println(winningRest);
+
 			return null;
 		} catch (HibernateException he) {
 			he.printStackTrace();
