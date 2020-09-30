@@ -34,13 +34,16 @@ public class Vote {
 	public Vote() {
 	}
 
-	public Vote(int id, Restaurant restaurant, Meal meal, AppUser user, short vote) {
-
-		this.id = id;
+	public Vote(Restaurant restaurant, Meal meal, AppUser user, short vote) {
 		this.restaurant = restaurant;
 		this.meal = meal;
 		this.user = user;
 		this.vote = vote;
+	}
+
+	public Vote(int id, Restaurant restaurant, Meal meal, AppUser user, short vote) {
+		this(restaurant, meal, user, vote);
+		this.id = id;
 	}
 
 	public int getId() {

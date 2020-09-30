@@ -53,7 +53,7 @@ public class MealService {
 	@Transactional(readOnly = true)
 	public Meal getMealById(int id) throws ResourceNotFoundException {
 		if(id <= 0){
-			throw new InvalidRequestException("The provided code cannot be less than or equal to zero.");
+			throw new InvalidRequestException("The provided id cannot be less than or equal to zero.");
 		}
 
 		try{

@@ -1,6 +1,7 @@
 package com.revature.web.aspects;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.exceptions.AuthenticationException;
 import com.revature.exceptions.AuthorizationException;
 import com.revature.web.dtos.Principal;
@@ -30,17 +31,16 @@ public class SecurityAspect {
 
 	@Around("@annotation(com.revature.web.security.Secured)")
 	public Object secureEndpoint(ProceedingJoinPoint pjp) throws Throwable{
-
-		Method method = ((MethodSignature) pjp.getSignature()).getMethod();
-		Secured securedAnno = method.getAnnotation(Secured.class);
-
-		List<String> allowedRoles = Arrays.asList(securedAnno.allowedRoles());
-		Principal principal = (Principal) request.getSession().getAttribute("principal");
-
+		Object o = request.getSession().getAttribute("principal");
+		ObjectMapper mapper = new ObjectMapper();
+		Principal principal = mapper.readValue((String) o,Principal.class);
 		if (principal == null) {
 			throw new AuthenticationException("An unauthenticated request was made to a protected endpoint!");
 		}
 
+		Method method = ((MethodSignature) pjp.getSignature()).getMethod();
+		Secured securedAnno = method.getAnnotation(Secured.class);
+		List<String> allowedRoles = Arrays.asList(securedAnno.allowedRoles());
 		if(!allowedRoles.contains(principal.getRole().toString())) {
 			throw new AuthorizationException("A forbidden request was made by " + principal.getUsername());
 		}
