@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
@@ -31,6 +33,15 @@ public class MealController {
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Meal getMealById(@PathVariable int id) {
         return mealService.getMealById(id);
+    }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public int setMealById(@PathVariable int id, HttpServletRequest req) {
+        int mealId = id;
+        HttpSession userSession = req.getSession();
+        userSession.setAttribute("mealId", mealId);
+        return mealId;
     }
 
     @ResponseStatus(HttpStatus.CREATED)

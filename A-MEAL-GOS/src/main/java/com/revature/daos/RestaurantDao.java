@@ -1,5 +1,6 @@
 package com.revature.daos;
 
+import com.revature.models.Meal;
 import com.revature.models.Restaurant;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -146,8 +147,7 @@ public class RestaurantDao implements CrudDao<Restaurant> {
 
     public List<Restaurant> findMealRestaurants(int id) {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Restaurants r INNER JOIN r.amg_meal_restaurants mr" +
-                "where mr.amg_meals.amg_meal_id = :id", Restaurant.class)
+        return session.createQuery("from Meal.restaurants m where m.id = :id", Restaurant.class)
                 .setParameter("id", id)
                 .getResultList();
     }
