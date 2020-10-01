@@ -246,4 +246,6 @@ public class UserDao implements CrudDao<AppUser> {
 		Session session = sessionFactory.getCurrentSession();
 		return Optional.of(session.get(AppUser.class, id)); // get returns null, load throws an error.
 	}
+
+
 }

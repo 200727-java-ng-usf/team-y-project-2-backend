@@ -132,7 +132,6 @@ public class MealDao implements CrudDao<Meal> {
 	public ResultDto findWinningRestaurant(int winner) {
 
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from")
 
 
 
@@ -204,5 +203,7 @@ public class MealDao implements CrudDao<Meal> {
 //							"ORDER BY total DESC", ResultDto.class)
 //							.setParameter("id", winner);
 //			resultDto = query.getSingleResult();
+
+		return null;
 	}
 }

@@ -4,6 +4,9 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
+import org.springframework.integration.websocket.ClientWebSocketContainer;
+import org.springframework.integration.websocket.IntegrationWebSocketContainer;
+import org.springframework.integration.websocket.ServerWebSocketContainer;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -14,6 +17,10 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.socket.client.WebSocketClient;
+import org.springframework.web.socket.client.jetty.JettyWebSocketClient;
+import org.springframework.web.socket.sockjs.client.SockJsClient;
+import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -103,6 +110,22 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		return transactionManager;
 	}
 
+//	@Bean
+//	public WebSocketClient webSocketClient() {
+//		return new SockJsClient(Collections.singletonList(new WebSocketTransport(new JettyWebSocketClient())));
+//	}
+//
+//	@Bean
+//	public IntegrationWebSocketContainer clientWebSocketContainer() {
+//		return new ClientWebSocketContainer(webSocketClient(), "ws://my.server.com/endpoint");
+//	}
+//
+//	//Server side
+//	@Bean
+//	public IntegrationWebSocketContainer serverWebSocketContainer() {
+//		return new ServerWebSocketContainer("/endpoint").withSockJs();
+//	}
+
 	// NOT A BEAN
 	private final Properties hibernateProperties() {
 		Properties hibernateProperties = new Properties();
@@ -114,8 +137,13 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		//	create: creates the schema, destroying previous data.
 		//	create-drop: drop the schema when the SessionFactory is closed explicitly, typically when the application is stopped.
 		//	none: does nothing with the schema, makes no changes to the database
+<<<<<<< HEAD
 		hibernateProperties.setProperty(Environment.HBM2DDL_AUTO, "validate");
+=======
+		hibernateProperties.setProperty(Environment.HBM2DDL_AUTO, "update");
+>>>>>>> f67dcbc9eba80649afc1f3d621856639a2debdef
 		hibernateProperties.setProperty(Environment.HBM2DDL_IMPORT_FILES, "import.sql");
+
 		return hibernateProperties;
 	}
 
