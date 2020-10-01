@@ -195,6 +195,9 @@ select * from amg_meals;
 select * from amg_restaurants;
 select * from amg_users;
 
+INSERT INTO amg_votes (amg_vote, vote_meal_id, restaurant_id, amg_user_id)
+VALUES (10, 5, 30, 2);
+
 
 
 -- Custom query for getting winning restaurant of a vote
@@ -209,7 +212,7 @@ JOIN
 ON 
 	av.restaurant_id = ar.amg_restaurant_id 
 WHERE 
-	av.vote_meal_id = 1
+	av.vote_meal_id = 5
 GROUP BY
     av.restaurant_id,
     ar.restaurant_name,
