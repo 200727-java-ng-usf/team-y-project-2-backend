@@ -71,17 +71,17 @@ public class RestaurantService {
 	}
 
 	/**
-	 * Returns the first <code>{@link Restaurant}</code> found with the given username.
-	 * @param name the String name to search by.
-	 * @return the first <code>{@link Restaurant}</code> found with the given name.
+	 * Returns the first <code>{@link Restaurant}</code> found with the given place id.
+	 * @param placeId id the String place id to search by.
+	 * @return the first <code>{@link Restaurant}</code> found with the given place id.
 	 */
 	@Transactional(readOnly = true)
-	public Restaurant getRestaurantByName(String name){
-		if(name == null || name.equals("")){
-			throw new InvalidRequestException("Username cannot be null or empty.");
+	public Restaurant getRestaurantByPlaceId(String placeId){
+		if(placeId == null || placeId.equals("")){
+			throw new InvalidRequestException("Place id cannot be null or empty.");
 		}
 		try{
-			return restaurantDao.findRestaurantByName(name)
+			return restaurantDao.findRestaurantByPlace(placeId)
 					.orElseThrow(ResourceNotFoundException::new);
 		} catch(Exception e) {
 			throw new AmealgoException(e);
