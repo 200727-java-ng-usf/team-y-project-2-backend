@@ -2,10 +2,14 @@ package com.revature.web.controllers;
 
 import com.revature.models.AppUser;
 import com.revature.models.Meal;
+import com.revature.models.Restaurant;
 import com.revature.services.MealService;
 import com.revature.services.UserService;
 import com.revature.web.dtos.Credentials;
 import com.revature.web.dtos.Principal;
+
+import com.revature.services.RestaurantService;
+
 import com.revature.web.security.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/meals")
@@ -22,11 +27,14 @@ public class MealController {
 
     private MealService mealService;
     private UserService userService;
+    private RestaurantService restaurantService;
 
     @Autowired
-    public MealController(MealService service, UserService service1) {
+    public MealController(MealService service, UserService service1, RestaurantService restaurantService) {
         this.mealService = service;
+        this.restaurantService = restaurantService;
         this.userService = service1;
+
     }
 
     // produces is good practice to include.
@@ -63,10 +71,12 @@ public class MealController {
         Meal newMeal = new Meal();
 
         if (meal.getNumVotes() == 0) {
-            newMeal = new Meal(meal.getNumVotes(), meal.getMealName());
+            newMeal = new Meal(meal.getNumVotes(), meal.getMealName(), meal.getRestaurants());
         } else {
-            newMeal = new Meal(3, meal.getMealName());
+            newMeal = new Meal(3, meal.getMealName(), meal.getRestaurants());
         }
+
+        restaurantService.createRestaurants((Set<Restaurant>) meal.getRestaurants());
         mealService.create(newMeal);
 
         return newMeal.getId();
