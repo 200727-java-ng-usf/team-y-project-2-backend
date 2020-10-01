@@ -97,7 +97,7 @@ public class MealController {
     public ResultDto getWinner(HttpServletRequest req) {
 
         int mealId = 1;
-        List<Vote> winningVote = mealService.getWinningMeal(mealId);
+        ResultDto winningVote = mealService.getWinningMeal(mealId);
 
         System.out.println(winningVote);
 

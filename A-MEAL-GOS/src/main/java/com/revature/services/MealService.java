@@ -144,7 +144,7 @@ public class MealService {
 
 
 	@Transactional(readOnly = true)
-	public List<Vote> getWinningMeal(int mealId) {
+	public ResultDto getWinningMeal(int mealId) {
 		return mealDao.findWinningRestaurant(mealId);
 	}
 

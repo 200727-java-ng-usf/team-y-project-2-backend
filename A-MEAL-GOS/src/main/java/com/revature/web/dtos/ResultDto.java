@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class ResultDto {
 
-    private short amg_vote;
+    private int amg_vote;
 
     private String restaurant_name;
 
@@ -16,17 +16,17 @@ public class ResultDto {
         super();
     }
 
-    public ResultDto(short amg_vote, String restaurant_name, String address) {
+    public ResultDto(int amg_vote, String restaurant_name, String address) {
         this.amg_vote = amg_vote;
         this.restaurant_name = restaurant_name;
         this.address = address;
     }
 
-    public short getAmg_vote() {
+    public int getAmg_vote() {
         return amg_vote;
     }
 
-    public void setAmg_vote(short amg_vote) {
+    public void setAmg_vote(int amg_vote) {
         this.amg_vote = amg_vote;
     }
 
