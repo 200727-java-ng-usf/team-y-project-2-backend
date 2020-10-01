@@ -1,5 +1,7 @@
 package com.revature.models;
 
+import com.revature.web.dtos.Principal;
+
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.persistence.*;
@@ -152,6 +154,12 @@ public class AppUser {
 
 	public AppUser(AppUser user){
 		this(user.id, user.username, user.passwordHash, user.passwordSalt, user.email, user.role);
+	}
+
+	public AppUser(Principal principal) {
+		this.id = principal.getId();
+		this.username = principal.getUsername();
+		this.role = Role.getByName(principal.getRole());
 	}
 	//endregion
 

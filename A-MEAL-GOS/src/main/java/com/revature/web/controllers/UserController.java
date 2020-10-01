@@ -1,5 +1,7 @@
 package com.revature.web.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.models.AppUser;
 import com.revature.models.Restaurant;
 import com.revature.services.RestaurantService;
@@ -7,13 +9,17 @@ import com.revature.services.UserService;
 import com.revature.web.dtos.Credentials;
 import com.revature.web.dtos.RestaurantDto;
 import com.revature.web.dtos.UserVote;
+import com.revature.web.dtos.Principal;
 import com.revature.web.security.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Set;
 
 // @RestController
 // 		implies @Controller at the class level
@@ -70,8 +76,8 @@ public class UserController {
 	}
 
 	@ResponseStatus(HttpStatus.OK)
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public boolean ValidateLikedRestaurant(@RequestParam String user, @RequestParam String rest_vote){
+	@GetMapping(value = "{user}/likes/{rest_vote}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public boolean ValidateLikedRestaurant(@PathVariable int user, @PathVariable String rest_vote){
 		try{
 			AppUser appUser = userService.getUserById(Integer.parseInt(user));
 			Restaurant restaurant = restaurantService.getRestaurantByPlaceId(rest_vote);
@@ -83,6 +89,29 @@ public class UserController {
 		}
 	}
 
+	@GetMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Set<Restaurant> getUserLikesWithPrincipal(HttpServletRequest req){
+		try {
+			Object o = req.getSession().getAttribute("principal");
+			ObjectMapper mapper = new ObjectMapper();
+			Principal principal = mapper.readValue((String) o,Principal.class);
+			return userService.getUserById(principal.getId()).getLikes();
+
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+//	@GetMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public Set<Restaurant> getUserLikesWithUserId(int id) {
+//
+//			return userService.getUserById(id).getLikes();
+//
+//
+//
+//	}
 
 
 
