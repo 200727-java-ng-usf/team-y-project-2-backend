@@ -3,11 +3,11 @@ package com.revature.web.controllers;
 import com.revature.models.AppUser;
 import com.revature.models.Meal;
 import com.revature.models.Restaurant;
-<<<<<<< HEAD
+
 import com.revature.models.Vote;
 import com.revature.services.MealService;
 import com.revature.web.dtos.ResultDto;
-=======
+
 import com.revature.services.MealService;
 import com.revature.services.UserService;
 import com.revature.web.dtos.Credentials;
@@ -15,7 +15,7 @@ import com.revature.web.dtos.Principal;
 
 import com.revature.services.RestaurantService;
 
->>>>>>> f67dcbc9eba80649afc1f3d621856639a2debdef
+
 import com.revature.web.security.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
-<<<<<<< HEAD
+
 import java.util.Optional;
-=======
+
 import java.util.Set;
->>>>>>> f67dcbc9eba80649afc1f3d621856639a2debdef
+
 
 @RestController
 @RequestMapping("/meals")
@@ -92,18 +92,21 @@ public class MealController {
         return newMeal.getId();
     }
 
-<<<<<<< HEAD
+
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResultDto getWinner(HttpServletRequest req) {
 
-//        HttpSession session = req.getSession();
-//        Integer winner = (Integer) session.getAttribute("mealId");
-        int winner = 1;
-        return mealService.getWinningMeal(winner);
+        int mealId = 1;
+        List<Vote> winningVote = mealService.getWinningMeal(mealId);
+
+        System.out.println(winningVote);
+
+
+        return null;
     }
 
-}
-=======
+
+
     @PostMapping(value = "/voted/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public int setMealFinishedVoting(@RequestBody Credentials creds, @PathVariable int id, HttpServletRequest req) {
         int mealId = id;
@@ -120,4 +123,3 @@ public class MealController {
     }
 
 }
->>>>>>> f67dcbc9eba80649afc1f3d621856639a2debdef

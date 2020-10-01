@@ -1,6 +1,7 @@
 package com.revature.daos;
 
 import com.revature.models.Meal;
+import com.revature.models.Vote;
 import com.revature.web.dtos.ResultDto;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -129,9 +130,13 @@ public class MealDao implements CrudDao<Meal> {
 		}
 	}
 
-	public ResultDto findWinningRestaurant(int winner) {
+	public List<Vote> findWinningRestaurant(int mealId) {
 
 		Session session = sessionFactory.getCurrentSession();
+		session.createQuery("from Vote where vote_meal_id = :id")
+				.setParameter("id", mealId)
+				.getResultList();
+
 
 
 
