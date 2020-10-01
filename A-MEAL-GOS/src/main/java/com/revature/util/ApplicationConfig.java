@@ -14,10 +14,6 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-<<<<<<< HEAD
-
-=======
->>>>>>> b1c8f5736a8be9f470f9e33edf6f3bceb7c29421
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
