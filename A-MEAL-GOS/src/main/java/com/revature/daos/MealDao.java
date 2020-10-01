@@ -8,6 +8,9 @@ import com.revature.web.dtos.ResultDto;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.hibernate.transform.AliasToBeanResultTransformer;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -131,34 +134,83 @@ public class MealDao implements CrudDao<Meal> {
 		}
 	}
 
-	public ResultDto findWinningRestaurant(Integer winner) {
-		Session session = sessionFactory.getCurrentSession();
-		try {
-			//Restaurant winningRestaurant = session.createQuery();
-			ResultDto winningRest = (ResultDto) session.createQuery(
-					"SELECT " +
-					"av.restaurant_id, " +
-					"SUM (av.amg_vote) AS total, " +
-					"ar.restaurant_name, " +
-					"ar.address " +
-					"FROM " +
-					"amg_votes av " +
-					"JOIN " +
-					"amg_restaurants ar " +
-					"ON " +
-					"av.restaurant_id = ar.amg_restaurant_id " +
-					"WHERE " +
-					"av.vote_meal_id = :id " +
-					"GROUP BY " +
-					"av.restaurant_id, " +
-					"ar.restaurant_name, " +
-					"ar.address " +
-					"ORDER BY total DESC", ResultDto.class)
-					.setParameter("id", winner)
-					.getSingleResult();
-			System.out.println(winningRest);
+	@SuppressWarnings("deprecation")
+	public ResultDto findWinningRestaurant(int winner) {
 
-			return null;
+		Session session = sessionFactory.getCurrentSession();
+
+		ResultDto resultDto = null;
+
+		try {
+
+			Query query = session.createQuery("SELECT new com.revature.web.dtos.ResultDto(" +
+					"SUM (av.vote) AS total, " +
+					"ar.name, " +
+					"ar.address) " +
+					"FROM " +
+					"com.revature.models.Vote av " +
+					"JOIN  " +
+					"com.revature.models.Restaurant ar " +
+					"ON  " +
+					"av.restaurant = ar.id  " +
+					"WHERE  " +
+					"av.meal = :id " +
+					"GROUP BY " +
+					"av.restaurant, " +
+					"ar.name, " +
+					"ar.address " +
+					"ORDER BY total DESC")
+					.setParameter("id", winner);
+			List results = query.list();
+			ResultDto result = (ResultDto) results.get(0);
+			System.out.println(result);
+
+//			Query query = session.createSQLQuery(
+//					"SELECT " +
+//							"SUM (av.vote) AS total, " +
+//							"ar.name, " +
+//							"ar.address " +
+//							"FROM " +
+//							"com.revature.models.Vote av " +
+//							"JOIN  " +
+//							"com.revature.models.Restaurant ar " +
+//							"ON  " +
+//							"av.restaurant = ar.id  " +
+//							"WHERE  " +
+//							"av.meal = :id " +
+//							"GROUP BY " +
+//							"av.restaurant, " +
+//							"ar.name, " +
+//							"ar.address " +
+//							"ORDER BY total DESC")
+//					.setParameter("id", winner);
+//					//.setResultTransformer(Transformers.aliasToBean(ResultDto.class));
+//
+//			ResultDto result = (ResultDto) query.getSingleResult();
+
+//			Query<ResultDto> query = session.createQuery(
+//					"SELECT new com.revature.web.dtos.ResultDto(" +
+//							"SUM (av.vote) AS total, " +
+//							"ar.name, " +
+//							"ar.address) " +
+//							"FROM " +
+//							"com.revature.models.Vote av " +
+//							"JOIN  " +
+//							"com.revature.models.Restaurant ar " +
+//							"ON  " +
+//							"av.restaurant = ar.id  " +
+//							"WHERE  " +
+//							"av.meal = :id " +
+//							"GROUP BY " +
+//							"av.restaurant, " +
+//							"ar.name, " +
+//							"ar.address " +
+//							"ORDER BY total DESC", ResultDto.class)
+//							.setParameter("id", winner);
+//			resultDto = query.getSingleResult();
+
+
+			return result;
 		} catch (HibernateException he) {
 			he.printStackTrace();
 		}

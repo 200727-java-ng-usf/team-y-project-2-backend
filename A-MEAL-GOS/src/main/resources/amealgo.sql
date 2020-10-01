@@ -197,7 +197,7 @@ select * from amg_users;
 
 -- Custom query for getting winning restaurant of a vote
 SELECT
-    SUM (av.amg_vote) AS total,
+    SUM (av.amg_vote),
     ar.restaurant_name,
     ar.address
 FROM
@@ -211,8 +211,8 @@ WHERE
 GROUP BY
     av.restaurant_id,
     ar.restaurant_name,
-    ar.address
-ORDER BY total DESC;
-LIMIT 5;
+    ar.address,
+    av.amg_vote 
+ORDER BY av.amg_vote DESC;
 
 

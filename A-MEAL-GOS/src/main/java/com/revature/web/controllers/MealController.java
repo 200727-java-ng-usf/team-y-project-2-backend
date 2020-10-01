@@ -60,10 +60,7 @@ public class MealController {
 //        HttpSession session = req.getSession();
 //        Integer winner = (Integer) session.getAttribute("mealId");
         int winner = 1;
-
-
-        ResultDto winningRestaurant = mealService.getWinningMeal(winner);
-        return null;
+        return mealService.getWinningMeal(winner);
     }
 
 }

@@ -139,7 +139,7 @@ public class MealService {
 	}
 
 	@Transactional(readOnly = true)
-	public ResultDto getWinningMeal(Integer winner) {
+	public ResultDto getWinningMeal(int winner) {
 		return mealDao.findWinningRestaurant(winner);
 	}
 	//endregion

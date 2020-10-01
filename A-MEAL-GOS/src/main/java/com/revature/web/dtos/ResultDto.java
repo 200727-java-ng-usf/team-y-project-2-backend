@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class ResultDto {
 
-    private int total;
+    private long amg_vote;
     private String restaurant_name;
     private String address;
 
@@ -12,18 +12,18 @@ public class ResultDto {
         super();
     }
 
-    public ResultDto(int total, String restaurant_name, String address) {
-        this.total = total;
+    public ResultDto(long amg_vote, String restaurant_name, String address) {
+        this.amg_vote = amg_vote;
         this.restaurant_name = restaurant_name;
         this.address = address;
     }
 
-    public int getTotal() {
-        return total;
+    public long getAmg_vote() {
+        return amg_vote;
     }
 
-    public void setTotal(int total) {
-        this.total = total;
+    public void setAmg_vote(long amg_vote) {
+        this.amg_vote = amg_vote;
     }
 
     public String getRestaurant_name() {
@@ -47,20 +47,20 @@ public class ResultDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ResultDto resultDto = (ResultDto) o;
-        return total == resultDto.total &&
+        return amg_vote == resultDto.amg_vote &&
                 Objects.equals(restaurant_name, resultDto.restaurant_name) &&
                 Objects.equals(address, resultDto.address);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(total, restaurant_name, address);
+        return Objects.hash(amg_vote, restaurant_name, address);
     }
 
     @Override
     public String toString() {
         return "ResultDto{" +
-                "total=" + total +
+                "total=" + amg_vote +
                 ", restaurant_name='" + restaurant_name + '\'' +
                 ", address='" + address + '\'' +
                 '}';
