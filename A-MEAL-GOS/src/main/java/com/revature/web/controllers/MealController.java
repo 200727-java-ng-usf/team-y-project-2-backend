@@ -94,15 +94,11 @@ public class MealController {
 
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResultDto getWinner(HttpServletRequest req) {
+    public ResultDto getWinner(@RequestBody Meal currentMeal, HttpServletRequest req) {
 
-        int mealId = 1;
-        ResultDto winningVote = mealService.getWinningMeal(mealId);
+        int mealId = currentMeal.getId();
 
-        System.out.println(winningVote);
-
-
-        return null;
+        return mealService.getWinningMeal(mealId);
     }
 
 

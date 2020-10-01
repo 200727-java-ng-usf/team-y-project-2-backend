@@ -138,7 +138,7 @@ public class MealDao implements CrudDao<Meal> {
 
 	public ResultDto findWinningRestaurant(int mealId) {
 
-		ResultDto result = jdbcTemplate.queryForObject("SELECT " +
+		return jdbcTemplate.queryForObject("SELECT " +
 				"SUM (av.amg_vote) AS total, " +
 				"ar.restaurant_name, " +
 				"ar.address " +
@@ -156,10 +156,5 @@ public class MealDao implements CrudDao<Meal> {
 				"ar.address " +
 				"ORDER BY total DESC " +
 				"LIMIT 1", rowMapper, mealId);
-
-		System.out.println(result);
-
-
-		return null;
 	}
 }
