@@ -18,6 +18,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 @EnableWebMvc
@@ -25,34 +27,58 @@ import java.util.Properties;
 @ComponentScan("com.revature")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableTransactionManagement
-@PropertySource("classpath:application.properties")
+//@PropertySource("classpath:application.properties")
 public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitializer {
 
-	@Value("${db.driver}")
+//	@Value("${db.driver}")
 	private String dbDriver;
-
-	@Value("${db.url}")
+//
+//	@Value("${db.url}")
 	private String dbUrl;
-
-	@Value("${db.schema}")
+//
+//	@Value("${db.schema}")
 	private String dbSchema;
-
-	@Value("${db.username}")
+//
+//	@Value("${db.username}")
 	private String dbUsername;
-
-	@Value("${db.password}")
+//
+//	@Value("${db.password}")
 	private String dbPassword;
 
 	@Bean
 	public BasicDataSource dataSource() {
-		BasicDataSource dataSource = new BasicDataSource();
-		if(dbDriver == null || dbDriver.isEmpty()){
-			dbDriver = System.getProperty("db.driver");
-			dbSchema = System.getProperty("db.schema");
-			dbUrl = System.getProperty("db.url");
-			dbUsername = System.getProperty("db.username");
-			dbPassword = System.getProperty("db.password");
+		Properties props = new Properties();
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		InputStream propsInput = loader.getResourceAsStream("application.properties");
+		try {
+			if(propsInput == null){
+				if(System.getProperty("db.url") == null){
+					dbDriver = System.getenv("db.driver");
+					dbSchema = System.getenv("db.schema");
+					dbUrl = System.getenv("db.url");
+					dbUsername = System.getenv("db.username");
+					dbPassword = System.getenv("db.password");
+
+				}else{
+					dbDriver = System.getProperty("db.driver");
+					dbSchema = System.getProperty("db.schema");
+					dbUrl = System.getProperty("db.url");
+					dbUsername = System.getProperty("db.username");
+					dbPassword = System.getProperty("db.password");
+				}
+
+			} else {
+				props.load(propsInput);
+				dbDriver = props.getProperty("db.driver");
+				dbSchema = props.getProperty("db.schema");
+				dbUrl = props.getProperty("db.url");
+				dbUsername = props.getProperty("db.username");
+				dbPassword = props.getProperty("db.password");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(dbDriver);
 		dataSource.setUrl(dbUrl);
 		dataSource.setDefaultSchema(dbSchema);
