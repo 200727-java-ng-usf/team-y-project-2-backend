@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Models all services and operations that might apply to <code>{@link Meal}</code>s.
@@ -112,5 +113,20 @@ public class RestaurantService {
 		return restaurantDao.deleteById(id);
 	}
 
+	@Transactional
+	public Restaurant createRestaurant(Restaurant restaurant){
+
+		restaurantDao.saveRestaurant(restaurant);
+
+		return restaurant;
+	}
+
+	@Transactional
+	public Set<Restaurant> createRestaurants (Set<Restaurant> restaurants){
+
+		restaurants.stream().forEach(restaurant -> createRestaurant(restaurant));
+
+		return restaurants;
+	}
 	//endregion
 }

@@ -134,4 +134,10 @@ public class RestaurantDao implements CrudDao<Restaurant> {
 				.setParameter("address", address)
 				.getSingleResult());
 	}
+
+	public Optional<Restaurant> saveRestaurant(Restaurant restaurant){
+		Session session = sessionFactory.getCurrentSession();
+		session.save(restaurant);
+		return Optional.of(restaurant);
+	}
 }
