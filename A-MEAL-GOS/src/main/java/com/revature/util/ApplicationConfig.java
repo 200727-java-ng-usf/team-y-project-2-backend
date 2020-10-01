@@ -27,6 +27,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Properties;
 
 @EnableWebMvc
 @Configuration
