@@ -97,15 +97,6 @@ public class MealController {
 
     @GetMapping(value = "/results/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResultDto getWinner(@PathVariable int id) throws JsonProcessingException {
-
-//        ObjectMapper mapper = new ObjectMapper();
-//        HttpSession userSession = req.getSession();
-//        String mealIdJSON = (String) userSession.getAttribute("mealId");
-//        Meal meal = mapper.readValue(mealIdJSON, Meal.class);
-//        System.out.println(meal);
-
-
-
         return mealService.getWinningMeal(id);
     }
 
