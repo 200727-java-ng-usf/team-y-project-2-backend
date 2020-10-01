@@ -8,7 +8,6 @@ import com.revature.services.UserService;
 import com.revature.web.dtos.Credentials;
 import com.revature.web.dtos.Principal;
 import com.revature.web.security.Secured;
-import jdk.packager.internal.ModuleManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -72,14 +71,14 @@ public class UserController {
 		return null;
 	}
 
-	@GetMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Set<Restaurant> getUserLikesWithUserId(int id) {
-
-			return userService.getUserById(id).getLikes();
-
-
-
-	}
+//	@GetMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE)
+//	public Set<Restaurant> getUserLikesWithUserId(int id) {
+//
+//			return userService.getUserById(id).getLikes();
+//
+//
+//
+//	}
 
 
 
