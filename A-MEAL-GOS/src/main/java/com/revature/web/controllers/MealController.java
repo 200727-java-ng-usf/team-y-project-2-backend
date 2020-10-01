@@ -1,15 +1,23 @@
 package com.revature.web.controllers;
 
+import com.revature.models.AppUser;
 import com.revature.models.Meal;
 import com.revature.models.Restaurant;
 import com.revature.services.MealService;
+import com.revature.services.UserService;
+import com.revature.web.dtos.Credentials;
+import com.revature.web.dtos.Principal;
+
 import com.revature.services.RestaurantService;
+
 import com.revature.web.security.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Set;
 
@@ -18,12 +26,15 @@ import java.util.Set;
 public class MealController {
 
     private MealService mealService;
+    private UserService userService;
     private RestaurantService restaurantService;
 
     @Autowired
-    public MealController(MealService service, RestaurantService restaurantService) {
+    public MealController(MealService service, UserService service1, RestaurantService restaurantService) {
         this.mealService = service;
         this.restaurantService = restaurantService;
+        this.userService = service1;
+
     }
 
     // produces is good practice to include.
@@ -36,6 +47,22 @@ public class MealController {
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Meal getMealById(@PathVariable int id) {
         return mealService.getMealById(id);
+    }
+
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @PostMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public int setMealById(@RequestBody Credentials creds, @PathVariable int id, HttpServletRequest req) {
+        int mealId = id;
+        HttpSession userSession = req.getSession();
+        userSession.setAttribute("mealId", mealId);
+        AppUser currentUser = userService.getUserByUsername(creds.getUsername());
+        System.out.println(currentUser);
+        Meal currentMeal = mealService.getMealById(mealId);
+
+
+        mealService.addToMeal(currentUser, currentMeal);
+        return mealId;
+
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -53,6 +80,21 @@ public class MealController {
         mealService.create(newMeal);
 
         return newMeal.getId();
+    }
+
+    @PostMapping(value = "/voted/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public int setMealFinishedVoting(@RequestBody Credentials creds, @PathVariable int id, HttpServletRequest req) {
+        int mealId = id;
+        HttpSession userSession = req.getSession();
+        userSession.setAttribute("mealId", mealId);
+        AppUser currentUser = userService.getUserByUsername(creds.getUsername());
+        System.out.println(currentUser);
+        Meal currentMeal = mealService.getMealById(mealId);
+
+
+        mealService.addToFinishedVoting(currentUser, currentMeal);
+        return mealId;
+
     }
 
 }

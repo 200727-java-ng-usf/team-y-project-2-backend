@@ -3,16 +3,11 @@ package com.revature.services;
 import com.revature.daos.RestaurantDao;
 import com.revature.exceptions.*;
 import com.revature.models.Restaurant;
-import com.revature.models.Restaurant;
-import com.revature.models.Role;
 import com.revature.models.Meal;
-import com.revature.web.dtos.Credentials;
-import com.revature.web.dtos.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -52,6 +47,21 @@ public class RestaurantService {
 		}
 		return users;
 	}
+
+	@Transactional(readOnly = true)
+	public List<Restaurant> getMealRestaurants(int mealId) throws ResourceNotFoundException {
+		List<Restaurant> restaurants = new ArrayList<>();
+		try{
+			restaurants = restaurantDao.findMealRestaurants(mealId);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		if(restaurants.isEmpty()){
+			throw new ResourceNotFoundException();
+		}
+		return restaurants;
+	}
+
 
 	/**
 	 * Returns the first <code>{@link Restaurant}</code> found with the given id.
