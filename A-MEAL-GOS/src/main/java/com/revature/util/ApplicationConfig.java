@@ -1,9 +1,11 @@
 package com.revature.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -14,6 +16,9 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -27,8 +32,9 @@ import java.util.Properties;
 @ComponentScan("com.revature")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableTransactionManagement
+@EnableWebSocketMessageBroker
 //@PropertySource("classpath:application.properties")
-public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitializer {
+public class ApplicationConfig implements WebApplicationInitializer, WebSocketMessageBrokerConfigurer {
 
 //	@Value("${db.driver}")
 	private String dbDriver;
@@ -103,21 +109,11 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		return transactionManager;
 	}
 
-//	@Bean
-//	public WebSocketClient webSocketClient() {
-//		return new SockJsClient(Collections.singletonList(new WebSocketTransport(new JettyWebSocketClient())));
-//	}
-//
-//	@Bean
-//	public IntegrationWebSocketContainer clientWebSocketContainer() {
-//		return new ClientWebSocketContainer(webSocketClient(), "ws://my.server.com/endpoint");
-//	}
-//
-//	//Server side
-//	@Bean
-//	public IntegrationWebSocketContainer serverWebSocketContainer() {
-//		return new ServerWebSocketContainer("/endpoint").withSockJs();
-//	}
+	@Bean
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
+	}
+
 
 	// NOT A BEAN
 	private final Properties hibernateProperties() {
@@ -137,6 +133,20 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 	}
 
 	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		registry.addEndpoint("/vote-socket")
+				.setAllowedOrigins("*")
+				.withSockJS();
+	}
+
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.setApplicationDestinationPrefixes("/app")
+				.enableSimpleBroker("/vote-message");
+	}
+
+
+	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 
 		AnnotationConfigWebApplicationContext container = new AnnotationConfigWebApplicationContext();
@@ -148,4 +158,5 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		dispatcher.addMapping("/");
 
 	}
+
 }

@@ -131,6 +131,13 @@ public class RestaurantDao implements CrudDao<Restaurant> {
                 .getSingleResult());
     }
 
+    public List<Restaurant> findMealRestaurants(int id) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from Meal.restaurants m where m.id = :id", Restaurant.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
     /**
      * Returns an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given address.
      *
@@ -144,29 +151,11 @@ public class RestaurantDao implements CrudDao<Restaurant> {
                 .setParameter("address", address)
                 .getSingleResult());
     }
-    public List<Restaurant> findMealRestaurants(int id) {
+
+    public Optional<Restaurant> saveRestaurant(Restaurant restaurant) {
         Session session = sessionFactory.getCurrentSession();
-        return session.createQuery("from Meal.restaurants m where m.id = :id", Restaurant.class)
-                .setParameter("id", id)
-                .getResultList();
+        session.save(restaurant);
+        return Optional.of(restaurant);
+
     }
-
-	/**
-	 * Returns an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given address.
-	 * @param address the address associated with the desired <code>{@link Restaurant}</code>
-	 * @return an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given address.
-	 * 			If none match the address, an <code>{@link Optional}</code>.empty() is returned.
-	 */
-	public Optional<Restaurant> findRestaurantByAddress(String address) {
-		Session session = sessionFactory.getCurrentSession();
-		return Optional.ofNullable(session.createQuery("from Restaurant rs where rs.address = :address", Restaurant.class)
-				.setParameter("address", address)
-				.getSingleResult());
-	}
-
-	public Optional<Restaurant> saveRestaurant(Restaurant restaurant){
-		Session session = sessionFactory.getCurrentSession();
-		session.save(restaurant);
-		return Optional.of(restaurant);
-
 }
