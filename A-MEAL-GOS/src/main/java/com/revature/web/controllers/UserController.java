@@ -62,7 +62,7 @@ public class UserController {
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
-	@PostMapping(value = "/likes",produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public boolean addLikedRestaurant(@RequestBody UserVote vote){
 		try{
 			AppUser user = userService.getUserById(vote.getUser_id());
@@ -79,7 +79,7 @@ public class UserController {
 	@GetMapping(value = "{user}/likes/{rest_vote}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public boolean ValidateLikedRestaurant(@PathVariable int user, @PathVariable String rest_vote){
 		try{
-			AppUser appUser = userService.getUserById(Integer.parseInt(user));
+			AppUser appUser = userService.getUserById(user);
 			Restaurant restaurant = restaurantService.getRestaurantByPlaceId(rest_vote);
 			if(appUser.getLikes().contains(restaurant)) return true;
 			else return false;

@@ -20,7 +20,8 @@ public class Meal {
 	@Column(name = "meal_name", nullable = false)
 	private String mealName;
 
-	@Column(name = "final_restaurant_id")
+	@OneToOne
+	@JoinColumn(name = "final_restaurant_id")
 	private Restaurant finalRestaurant;
 
 	@OneToMany
@@ -54,7 +55,7 @@ public class Meal {
 	public Meal() {
 	}
 
-	public Meal(int id, int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> usersInMeal, Set<AppUser> usersFinishedVoting) {
+	public Meal(int id, int numVotes, String mealName, Restaurant finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> usersInMeal, Set<AppUser> usersFinishedVoting) {
 		this.id = id;
 		this.numVotes = numVotes;
 		this.mealName = mealName;
@@ -64,7 +65,7 @@ public class Meal {
 		this.usersFinishedVoting = usersFinishedVoting;
 	}
 
-	public Meal(int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> usersInMeal) {
+	public Meal(int numVotes, String mealName, Restaurant finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> usersInMeal) {
 		this.numVotes = numVotes;
 		this.mealName = mealName;
 		this.finalRestaurant = finalRestaurant;
@@ -72,7 +73,7 @@ public class Meal {
 		this.usersInMeal = usersInMeal;
 	}
 
-	public Meal(int id, int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> usersInMeal) {
+	public Meal(int id, int numVotes, String mealName, Restaurant finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> usersInMeal) {
 		this(numVotes, mealName, finalRestaurant, restaurants, usersInMeal);
 		this.id = id;
 	}

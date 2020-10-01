@@ -83,7 +83,7 @@ public class RestaurantService {
 
 	/**
 	 * Returns the first <code>{@link Restaurant}</code> found with the given place id.
-	 * @param placeId id the String place id to search by.
+	 * @param placeId id the int place id to search by.
 	 * @return the first <code>{@link Restaurant}</code> found with the given place id.
 	 */
 	@Transactional(readOnly = true)
