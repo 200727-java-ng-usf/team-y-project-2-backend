@@ -144,7 +144,14 @@ public class MealService {
 		return user;
 	}
 
-
+	@Transactional(readOnly = false)
+	public AppUser addToFinishedVoting(AppUser user, Meal meal) {
+		Set<AppUser> setToAdd = new HashSet<>();
+		setToAdd.add(user);
+		meal.setUsersFinishedVoting(setToAdd);
+		mealDao.update(meal);
+		return user;
+	}
 
 
 

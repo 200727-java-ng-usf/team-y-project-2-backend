@@ -72,4 +72,19 @@ public class MealController {
         return newMeal.getId();
     }
 
+    @PostMapping(value = "/voted/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public int setMealFinishedVoting(@RequestBody Credentials creds, @PathVariable int id, HttpServletRequest req) {
+        int mealId = id;
+        HttpSession userSession = req.getSession();
+        userSession.setAttribute("mealId", mealId);
+        AppUser currentUser = userService.getUserByUsername(creds.getUsername());
+        System.out.println(currentUser);
+        Meal currentMeal = mealService.getMealById(mealId);
+
+
+        mealService.addToFinishedVoting(currentUser, currentMeal);
+        return mealId;
+
+    }
+
 }

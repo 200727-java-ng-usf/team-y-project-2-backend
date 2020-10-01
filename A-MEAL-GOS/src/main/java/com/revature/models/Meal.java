@@ -40,21 +40,40 @@ public class Meal {
 			inverseJoinColumns = @JoinColumn(name = "amg_user_id")
 	)
 	private Set<AppUser> usersInMeal;
+
+	@OneToMany
+	@JoinTable(
+			name = "amg_meal_users_voted",
+			schema = "amealgos",
+			joinColumns = @JoinColumn(name = "amg_meal_id"),
+			inverseJoinColumns = @JoinColumn(name = "amg_user_id")
+	)
+	private Set<AppUser> usersFinishedVoting;
 	//endregion
 
 	public Meal() {
 	}
 
-	public Meal(int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> voted) {
+	public Meal(int id, int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> usersInMeal, Set<AppUser> usersFinishedVoting) {
+		this.id = id;
 		this.numVotes = numVotes;
 		this.mealName = mealName;
 		this.finalRestaurant = finalRestaurant;
 		this.restaurants = restaurants;
-		this.usersInMeal = voted;
+		this.usersInMeal = usersInMeal;
+		this.usersFinishedVoting = usersFinishedVoting;
 	}
 
-	public Meal(int id, int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> voted) {
-		this(numVotes, mealName, finalRestaurant, restaurants, voted);
+	public Meal(int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> usersInMeal) {
+		this.numVotes = numVotes;
+		this.mealName = mealName;
+		this.finalRestaurant = finalRestaurant;
+		this.restaurants = restaurants;
+		this.usersInMeal = usersInMeal;
+	}
+
+	public Meal(int id, int numVotes, String mealName, String finalRestaurant, Set<Restaurant> restaurants, Set<AppUser> usersInMeal) {
+		this(numVotes, mealName, finalRestaurant, restaurants, usersInMeal);
 		this.id = id;
 	}
 
@@ -128,6 +147,14 @@ public class Meal {
 		this.usersInMeal = usersInMeal;
 	}
 
+	public Set<AppUser> getUsersFinishedVoting() {
+		return usersFinishedVoting;
+	}
+
+	public void setUsersFinishedVoting(Set<AppUser> usersFinishedVoting) {
+		this.usersFinishedVoting = usersFinishedVoting;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -138,12 +165,13 @@ public class Meal {
 				Objects.equals(mealName, meal.mealName) &&
 				Objects.equals(finalRestaurant, meal.finalRestaurant) &&
 				Objects.equals(restaurants, meal.restaurants) &&
-				Objects.equals(usersInMeal, meal.usersInMeal);
+				Objects.equals(usersInMeal, meal.usersInMeal) &&
+				Objects.equals(usersFinishedVoting, meal.usersFinishedVoting);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, numVotes, mealName, finalRestaurant, restaurants, usersInMeal);
+		return Objects.hash(id, numVotes, mealName, finalRestaurant, restaurants, usersInMeal, usersFinishedVoting);
 	}
 
 	@Override
@@ -154,7 +182,8 @@ public class Meal {
 				", mealName='" + mealName + '\'' +
 				", finalRestaurant='" + finalRestaurant + '\'' +
 				", restaurants=" + restaurants +
-				", voted=" + usersInMeal +
+				", usersInMeal=" + usersInMeal +
+				", usersFinishedVoting=" + usersFinishedVoting +
 				'}';
 	}
 }
