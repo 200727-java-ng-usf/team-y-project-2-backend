@@ -1,5 +1,7 @@
 package com.revature.web.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.models.AppUser;
 import com.revature.models.Meal;
 import com.revature.models.Restaurant;
@@ -93,12 +95,18 @@ public class MealController {
     }
 
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResultDto getWinner(@RequestBody Meal currentMeal, HttpServletRequest req) {
+    @GetMapping(value = "/results/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResultDto getWinner(@PathVariable int id) throws JsonProcessingException {
 
-        int mealId = currentMeal.getId();
+//        ObjectMapper mapper = new ObjectMapper();
+//        HttpSession userSession = req.getSession();
+//        String mealIdJSON = (String) userSession.getAttribute("mealId");
+//        Meal meal = mapper.readValue(mealIdJSON, Meal.class);
+//        System.out.println(meal);
 
-        return mealService.getWinningMeal(mealId);
+
+
+        return mealService.getWinningMeal(id);
     }
 
 
