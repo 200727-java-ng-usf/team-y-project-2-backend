@@ -28,7 +28,6 @@ import javax.servlet.ServletRegistration;
 import java.io.IOException;
 import java.io.InputStream;
 
-
 @EnableWebMvc
 @Configuration
 @ComponentScan("com.revature")
