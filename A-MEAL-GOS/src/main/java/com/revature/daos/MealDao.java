@@ -1,16 +1,11 @@
 package com.revature.daos;
 
-import com.revature.models.AppUser;
 import com.revature.models.Meal;
-import com.revature.models.Restaurant;
-import com.revature.models.Vote;
 import com.revature.web.dtos.ResultDto;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
-import org.hibernate.transform.AliasToBeanResultTransformer;
-import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -134,36 +129,37 @@ public class MealDao implements CrudDao<Meal> {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public ResultDto findWinningRestaurant(int winner) {
 
 		Session session = sessionFactory.getCurrentSession();
+		Query query = session.createQuery("from")
 
-		ResultDto resultDto = null;
 
-		try {
 
-			Query query = session.createQuery("SELECT new com.revature.web.dtos.ResultDto(" +
-					"SUM (av.vote) AS total, " +
-					"ar.name, " +
-					"ar.address) " +
-					"FROM " +
-					"com.revature.models.Vote av " +
-					"JOIN  " +
-					"com.revature.models.Restaurant ar " +
-					"ON  " +
-					"av.restaurant = ar.id  " +
-					"WHERE  " +
-					"av.meal = :id " +
-					"GROUP BY " +
-					"av.restaurant, " +
-					"ar.name, " +
-					"ar.address " +
-					"ORDER BY total DESC")
-					.setParameter("id", winner);
-			List results = query.list();
-			ResultDto result = (ResultDto) results.get(0);
-			System.out.println(result);
+//		Query query = session.createQuery(
+//				"SELECT new com.revature.web.dtos.ResultDto(" +
+//				"SUM (av.amg_vote) AS total, " +
+//				"ar.restaurant_name, " +
+//				"ar.address) " +
+//				"FROM " +
+//				"com.revature.models.Vote av " +
+//				"JOIN  " +
+//				"com.revature.models.Restaurant ar " +
+//				"ON  " +
+//				"av.restaurant = ar.id  " +
+//				"WHERE  " +
+//				"av.meal = :id " +
+//				"GROUP BY " +
+//				"av.restaurant, " +
+//				"ar.name, " +
+//				"ar.address " +
+//				"ORDER BY total DESC")
+//				.setParameter("id", winner);
+//		List<ResultDto> resultList = query.list();
+//		ResultDto result = resultList.get(0);
+//
+//		System.out.println(result);
+//		return result;
 
 //			Query query = session.createSQLQuery(
 //					"SELECT " +
@@ -208,12 +204,5 @@ public class MealDao implements CrudDao<Meal> {
 //							"ORDER BY total DESC", ResultDto.class)
 //							.setParameter("id", winner);
 //			resultDto = query.getSingleResult();
-
-
-			return result;
-		} catch (HibernateException he) {
-			he.printStackTrace();
-		}
-		return null;
 	}
 }

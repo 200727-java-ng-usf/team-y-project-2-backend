@@ -6,6 +6,7 @@ drop table if exists amg_likes;
 drop table if exists amg_meals; 
 drop table if exists amg_restaurants;
 drop table if exists amg_users;
+DROP TABLE IF EXISTS amg_winning_vote;
 
 create table amg_users( 
 	amg_user_id						serial not null, 
@@ -181,6 +182,7 @@ VALUES
 	(0, 1, 3, 2)
 	;
 
+
 -- +-------------------------------------------------------------+ 
 -- +                    	  TESTING 
 -- +-------------------------------------------------------------+ 
@@ -197,7 +199,7 @@ select * from amg_users;
 
 -- Custom query for getting winning restaurant of a vote
 SELECT
-    SUM (av.amg_vote),
+    SUM (av.amg_vote) AS total,
     ar.restaurant_name,
     ar.address
 FROM
@@ -211,8 +213,10 @@ WHERE
 GROUP BY
     av.restaurant_id,
     ar.restaurant_name,
-    ar.address,
-    av.amg_vote 
-ORDER BY av.amg_vote DESC;
+    ar.address
+ORDER BY total DESC;
+
+
+
 
 

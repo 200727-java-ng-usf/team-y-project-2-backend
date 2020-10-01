@@ -1,28 +1,32 @@
 package com.revature.web.dtos;
 
+import org.hibernate.annotations.Immutable;
+
 import java.util.Objects;
 
 public class ResultDto {
 
-    private long amg_vote;
+    private short amg_vote;
+
     private String restaurant_name;
+
     private String address;
 
     public ResultDto() {
         super();
     }
 
-    public ResultDto(long amg_vote, String restaurant_name, String address) {
+    public ResultDto(short amg_vote, String restaurant_name, String address) {
         this.amg_vote = amg_vote;
         this.restaurant_name = restaurant_name;
         this.address = address;
     }
 
-    public long getAmg_vote() {
+    public short getAmg_vote() {
         return amg_vote;
     }
 
-    public void setAmg_vote(long amg_vote) {
+    public void setAmg_vote(short amg_vote) {
         this.amg_vote = amg_vote;
     }
 
