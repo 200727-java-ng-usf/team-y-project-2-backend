@@ -151,11 +151,35 @@ public class RestaurantDao implements CrudDao<Restaurant> {
                 .setParameter("address", address)
                 .getSingleResult());
     }
+<<<<<<< HEAD
 
+=======
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    public List<Restaurant> findMealRestaurants(int id) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from Meal.restaurants m where m.id = :id", Restaurant.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
+    /**
+     *
+     * @param restaurant
+     * @return
+     */
+>>>>>>> 10981cad60fcedccebe14fb9a61252b2adc7415a
     public Optional<Restaurant> saveRestaurant(Restaurant restaurant) {
         Session session = sessionFactory.getCurrentSession();
         session.save(restaurant);
         return Optional.of(restaurant);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 10981cad60fcedccebe14fb9a61252b2adc7415a
     }
 }
