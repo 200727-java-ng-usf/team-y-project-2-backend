@@ -2,13 +2,21 @@ package com.revature.services;
 
 import com.revature.daos.MealDao;
 import com.revature.exceptions.*;
+import com.revature.models.AppUser;
 import com.revature.models.Meal;
+import com.revature.models.Restaurant;
+import com.revature.models.Vote;
+import com.revature.web.dtos.ResultDto;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.*;
+
 
 /**
  * Models all services and operations that might apply to <code>{@link Meal}</code>s.
@@ -133,5 +141,30 @@ public class MealService {
 		if(Meal.getMealName() == null || Meal.getMealName().trim().equals("")) return false;
 		return true;
 	}
+
+
+	@Transactional(readOnly = true)
+	public ResultDto getWinningMeal(int mealId) {
+		return mealDao.findWinningRestaurant(mealId);
+	}
+
+	@Transactional(readOnly = false)
+	public AppUser addToMeal(AppUser user, Meal meal) {
+		meal.addUsersInMeal(user);
+		mealDao.update(meal);
+		return user;
+	}
+
+	@Transactional(readOnly = false)
+	public AppUser addToFinishedVoting(AppUser user, Meal meal) {
+		meal.addUsersFinishedVoting(user);
+		mealDao.update(meal);
+		return user;
+	}
+
+
+
+
+
 	//endregion
 }

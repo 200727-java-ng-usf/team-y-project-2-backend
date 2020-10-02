@@ -1,5 +1,6 @@
 package com.revature.daos;
 
+import com.revature.models.Meal;
 import com.revature.models.Restaurant;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -18,109 +19,125 @@ import java.util.Optional;
 @Repository
 public class RestaurantDao implements CrudDao<Restaurant> {
 
-	/**
-	 * The <code>{@link SessionFactory}</code> sessionFactory instance.
-	 */
-	private SessionFactory sessionFactory;
+    /**
+     * The <code>{@link SessionFactory}</code> sessionFactory instance.
+     */
+    private SessionFactory sessionFactory;
 
-	@Autowired
-	public RestaurantDao(SessionFactory factory){
-		sessionFactory = factory;
-	}
-	/**
-	 * Saves the given <code>{@link Restaurant}</code> to the repository.
-	 * @param restaurant the <code>{@link Restaurant}</code> to save to the repository
-	 */
-	@Override
-	public Optional<Restaurant> save(Restaurant restaurant) {
-		Session session = sessionFactory.getCurrentSession();
-		session.save(restaurant);
-		return Optional.of(restaurant);
-	}
+    @Autowired
+    public RestaurantDao(SessionFactory factory) {
+        sessionFactory = factory;
+    }
 
-	/**
-	 * Returns all <code>{@link Restaurant}</code>s in the repository in an <code>{@link ArrayList}</code><<code>{@link Restaurant}</code>>
-	 * @return an <code>{@link ArrayList}</code><<code>{@link Restaurant}</code>> of all <code>{@link Restaurant}</code>s in the repository.
-	 */
-	@Override
-	public List<Restaurant> findAll() {
-		Session session = sessionFactory.getCurrentSession();
-		return session.createQuery("from Restaurant", Restaurant.class).getResultList();
-	}
+    /**
+     * Saves the given <code>{@link Restaurant}</code> to the repository.
+     *
+     * @param restaurant the <code>{@link Restaurant}</code> to save to the repository
+     */
+    @Override
+    public Optional<Restaurant> save(Restaurant restaurant) {
+        Session session = sessionFactory.getCurrentSession();
+        session.save(restaurant);
+        return Optional.of(restaurant);
+    }
 
-	/**
-	 * Returns an <code>{@link Restaurant}</code>s with the given id.
-	 * @param id the id associated with the <code>{@link Restaurant}</code>.
-	 * @return an <code>{@link Restaurant}</code>s with the given id.
-	 * 			If no <code>{@link Restaurant}</code> is found, returns null.
-	 */
-	@Override
-	public Optional<Restaurant> findById(int id) {
-		Session session = sessionFactory.getCurrentSession();
-		return Optional.of(session.get(Restaurant.class, id));
-	}
+    /**
+     * Returns all <code>{@link Restaurant}</code>s in the repository in an <code>{@link ArrayList}</code><<code>{@link Restaurant}</code>>
+     *
+     * @return an <code>{@link ArrayList}</code><<code>{@link Restaurant}</code>> of all <code>{@link Restaurant}</code>s in the repository.
+     */
+    @Override
+    public List<Restaurant> findAll() {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from Restaurant", Restaurant.class).getResultList();
+    }
 
-	/**
-	 * Returns true if a successful update occurs.
-	 * @param restaurant the <code>{@link Restaurant}</code> to update.
-	 * @return true if update was successful.
-	 */
-	@Override
-	public boolean update(Restaurant restaurant) {
-		Session session = sessionFactory.getCurrentSession();
-		try{
+    /**
+     * Returns an <code>{@link Restaurant}</code>s with the given id.
+     *
+     * @param id the id associated with the <code>{@link Restaurant}</code>.
+     * @return an <code>{@link Restaurant}</code>s with the given id.
+     * If no <code>{@link Restaurant}</code> is found, returns null.
+     */
+    @Override
+    public Optional<Restaurant> findById(int id) {
+        Session session = sessionFactory.getCurrentSession();
+        return Optional.of(session.get(Restaurant.class, id));
+    }
+
+    /**
+     * Returns true if a successful update occurs.
+     *
+     * @param restaurant the <code>{@link Restaurant}</code> to update.
+     * @return true if update was successful.
+     */
+    @Override
+    public boolean update(Restaurant restaurant) {
+        Session session = sessionFactory.getCurrentSession();
+        try {
 //			Restaurant user = session.load(Restaurant.class, username);
-			session.update(restaurant);
-			return true;
-		}catch(HibernateException he){
-			he.printStackTrace();
-			return false;
-		}
-	}
+            session.update(restaurant);
+            return true;
+        } catch (HibernateException he) {
+            he.printStackTrace();
+            return false;
+        }
+    }
 
-	/**
-	 * Deletes an <code>{@link Restaurant}</code> by the <code>{@link Restaurant}</code>s id.
-	 * @param id the id of the <code>{@link Restaurant}</code> to delete.
-	 * @return true if the deletion was successful.
-	 */
-	@Override
-	public boolean deleteById(int id) {
-		Session session = sessionFactory.getCurrentSession();
-		try{
-			Restaurant user = session.load(Restaurant.class, id);
-			session.delete(user);
-			return true;
-		}catch(HibernateException he){
-			he.printStackTrace();
-			return false;
-		}
-	}
+    /**
+     * Deletes an <code>{@link Restaurant}</code> by the <code>{@link Restaurant}</code>s id.
+     *
+     * @param id the id of the <code>{@link Restaurant}</code> to delete.
+     * @return true if the deletion was successful.
+     */
+    @Override
+    public boolean deleteById(int id) {
+        Session session = sessionFactory.getCurrentSession();
+        try {
+            Restaurant user = session.load(Restaurant.class, id);
+            session.delete(user);
+            return true;
+        } catch (HibernateException he) {
+            he.printStackTrace();
+            return false;
+        }
+    }
 
-	/**
-	 * Returns an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given name.
-	 * @param name the name associated with the desired <code>{@link Restaurant}</code>
-	 * @return an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given name.
-	 * 			If none match the name, an <code>{@link Optional}</code>.empty() is returned.
-	 */
-	public Optional<Restaurant> findRestaurantByName(String name) {
-		Session session = sessionFactory.getCurrentSession();
-		return Optional.ofNullable(session.createQuery("from Restaurant rs where rs.username = :un", Restaurant.class)
-				.setParameter("un", name)
-				.getSingleResult());
-	}
+    /**
+     * Returns an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given name.
+     *
+     * @param name the name associated with the desired <code>{@link Restaurant}</code>
+     * @return an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given name.
+     * If none match the name, an <code>{@link Optional}</code>.empty() is returned.
+     */
+    public Optional<Restaurant> findRestaurantByName(String name) {
+        Session session = sessionFactory.getCurrentSession();
+        return Optional.ofNullable(session.createQuery("from Restaurant rs where rs.username = :un", Restaurant.class)
+                .setParameter("un", name)
+                .getSingleResult());
+    }
 
-	/**
-	 * Returns an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given place.
-	 * @param place the place associated with the desired <code>{@link Restaurant}</code>
-	 * @return an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given place.
-	 * 			If none match the place, an <code>{@link Optional}</code>.empty() is returned.
-	 */
-	public Optional<Restaurant> findRestaurantByPlace(String place) {
-		Session session = sessionFactory.getCurrentSession();
-		return Optional.ofNullable(session.createQuery("from Restaurant rs where rs.place = :place", Restaurant.class)
-				.setParameter("place", place)
-				.getSingleResult());
-	}
+    /**
+     * Returns an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given place.
+     *
+     * @param place the place associated with the desired <code>{@link Restaurant}</code>
+     * @return an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given place.
+     * If none match the place, an <code>{@link Optional}</code>.empty() is returned.
+     */
+    public Optional<Restaurant> findRestaurantByPlace(String place) {
+        Session session = sessionFactory.getCurrentSession();
+        return Optional.ofNullable(session.createQuery("from Restaurant rs where rs.place = :place", Restaurant.class)
+                .setParameter("place", place)
+                .getSingleResult());
+    }
+
+    public List<Restaurant> findMealRestaurants(int id) {
+        Session session = sessionFactory.getCurrentSession();
+        return session.createQuery("from Meal.restaurants m where m.id = :id", Restaurant.class)
+                .setParameter("id", id)
+                .getResultList();
+    }
+
 
 	/**
 	 * Returns an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given address.
@@ -134,4 +151,18 @@ public class RestaurantDao implements CrudDao<Restaurant> {
 				.setParameter("address", address)
 				.getSingleResult());
 	}
+
+    /**
+     *
+     * @param restaurant
+     * @return
+     */
+
+    public Optional<Restaurant> saveRestaurant(Restaurant restaurant) {
+        Session session = sessionFactory.getCurrentSession();
+        session.save(restaurant);
+        return Optional.of(restaurant);
+
+    }
+
 }

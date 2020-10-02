@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +133,15 @@ public class VoteDao implements CrudDao<Vote> {
 	 */
 	public List<Vote> findVotesByUser(AppUser user) {
 		Session session = sessionFactory.getCurrentSession();
-		return session.createQuery("from Vote  vt where  vt.user = :user", Vote.class)
+		return session.createQuery("from Vote vt where vt.user = :user", Vote.class)
+				.setParameter("user", user)
+				.getResultList();
+	}
+
+	@Transactional(readOnly = false)
+	public List<Vote> findCastVotesByUser(AppUser user) {
+		Session session = sessionFactory.getCurrentSession();
+		return session.createQuery("from Vote vt where vt.user = :user and vt.vote = 1", Vote.class)
 				.setParameter("user", user)
 				.getResultList();
 	}

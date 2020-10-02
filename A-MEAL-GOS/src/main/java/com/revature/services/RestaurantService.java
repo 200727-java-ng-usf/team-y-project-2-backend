@@ -3,18 +3,14 @@ package com.revature.services;
 import com.revature.daos.RestaurantDao;
 import com.revature.exceptions.*;
 import com.revature.models.Restaurant;
-import com.revature.models.Restaurant;
-import com.revature.models.Role;
 import com.revature.models.Meal;
-import com.revature.web.dtos.Credentials;
-import com.revature.web.dtos.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Models all services and operations that might apply to <code>{@link Meal}</code>s.
@@ -36,7 +32,8 @@ public class RestaurantService {
 
 	/**
 	 * Returns all restaurants registered within the database.
-	 * @return a Set of <code>{@link Restaurant}</code>s that have been registered and saved to the database
+	 * @return a List of <code>{@link Restaurant}</code>s that have been registered and saved to the database
+	 * @throws ResourceNotFoundException
 	 */
 	@Transactional(readOnly = true)
 	public List<Restaurant> getAllRestaurant() throws ResourceNotFoundException {
@@ -51,6 +48,27 @@ public class RestaurantService {
 		}
 		return users;
 	}
+
+	/**
+	 * Returns all restaurants registered within the database in the meal with the given meal id.
+	 * @param mealId the int id of the meal to search for
+	 * @return a List of <code>{@link Restaurant}</code>s that are associated with the meal with the given meal id
+	 * @throws ResourceNotFoundException
+	 */
+	@Transactional(readOnly = true)
+	public List<Restaurant> getMealRestaurants(int mealId) throws ResourceNotFoundException {
+		List<Restaurant> restaurants = new ArrayList<>();
+		try{
+			restaurants = restaurantDao.findMealRestaurants(mealId);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		if(restaurants.isEmpty()){
+			throw new ResourceNotFoundException();
+		}
+		return restaurants;
+	}
+
 
 	/**
 	 * Returns the first <code>{@link Restaurant}</code> found with the given id.
@@ -71,17 +89,17 @@ public class RestaurantService {
 	}
 
 	/**
-	 * Returns the first <code>{@link Restaurant}</code> found with the given username.
-	 * @param name the String name to search by.
-	 * @return the first <code>{@link Restaurant}</code> found with the given name.
+	 * Returns the first <code>{@link Restaurant}</code> found with the given place id.
+	 * @param placeId id the int place id to search by.
+	 * @return the first <code>{@link Restaurant}</code> found with the given place id.
 	 */
 	@Transactional(readOnly = true)
-	public Restaurant getRestaurantByName(String name){
-		if(name == null || name.equals("")){
-			throw new InvalidRequestException("Username cannot be null or empty.");
+	public Restaurant getRestaurantByPlaceId(String placeId){
+		if(placeId == null || placeId.equals("")){
+			throw new InvalidRequestException("Place id cannot be null or empty.");
 		}
 		try{
-			return restaurantDao.findRestaurantByName(name)
+			return restaurantDao.findRestaurantByPlace(placeId)
 					.orElseThrow(ResourceNotFoundException::new);
 		} catch(Exception e) {
 			throw new AmealgoException(e);
@@ -112,5 +130,20 @@ public class RestaurantService {
 		return restaurantDao.deleteById(id);
 	}
 
+	@Transactional
+	public Restaurant createRestaurant(Restaurant restaurant){
+
+		restaurantDao.saveRestaurant(restaurant);
+
+		return restaurant;
+	}
+
+	@Transactional
+	public Set<Restaurant> createRestaurants (Set<Restaurant> restaurants){
+
+		restaurants.stream().forEach(restaurant -> createRestaurant(restaurant));
+
+		return restaurants;
+	}
 	//endregion
 }

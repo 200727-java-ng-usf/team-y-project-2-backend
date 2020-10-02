@@ -88,6 +88,24 @@ public class UserService {
 	}
 
 	/**
+	 * Returns the first <code>{@link AppUser}</code> found with the given email.
+	 * @param email the String email to search by.
+	 * @return the first <code>{@link AppUser}</code> found with the given email.
+	 */
+	@Transactional(readOnly = true)
+	public AppUser getUserByEmail(String email){
+		if(email == null || email.equals("")){
+			throw new InvalidRequestException("Username cannot be null or empty.");
+		}
+		try{
+			return userDao.findUserByEmail(email)
+					.orElseThrow(ResourceNotFoundException::new);
+		} catch(Exception e) {
+			throw new AmealgoException(e);
+		}
+	}
+
+	/**
 	 * This method authenticates a <code>{@link AppUser}</code>  that already exists within the database.
 	 * with the given credentials with the database. If a user already exists with the credentials
 	 * or a user does not exist with the credentials or any credential is either null or empty,
@@ -214,6 +232,7 @@ public class UserService {
 			throw new AmealgoException(e);
 		}
 	}
+
 
 	/**
 	 * Validates that the given <code>{@link AppUser}</code> and its fields are

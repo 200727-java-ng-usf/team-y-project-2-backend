@@ -4,6 +4,8 @@ import com.revature.daos.VoteDao;
 import com.revature.exceptions.AmealgoException;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
+import com.revature.exceptions.ResourcePersistenceException;
+import com.revature.models.AppUser;
 import com.revature.models.Meal;
 import com.revature.models.Vote;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +26,8 @@ public class VoteService {
 	private VoteDao voteDao;
 
 	@Autowired
-	public VoteService(VoteDao voteDao){
-		this.voteDao = VoteService.this.voteDao;
+	public VoteService(VoteDao dao){
+		this.voteDao = dao;
 	}
 
 
@@ -111,6 +113,24 @@ public class VoteService {
 	@Transactional(readOnly = false)
 	public boolean deleteVoteById(int id){
 		return voteDao.deleteById(id);
+	}
+
+
+	@Transactional(readOnly = false)
+	public Vote createVote(Vote vote){
+
+		if (vote.getVote() == 0 || vote.getVote() == 1) {
+			return voteDao.save(vote).get();
+		}
+		throw new ResourcePersistenceException("Vote must be positive or negative!");
+	}
+
+	public int getNumberOfVotesCast(AppUser user) {
+
+		List<Vote> votes = voteDao.findCastVotesByUser(user);
+
+		return votes.size();
+
 	}
 
 	//endregion

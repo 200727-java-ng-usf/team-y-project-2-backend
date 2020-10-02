@@ -1,9 +1,14 @@
 package com.revature.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -14,6 +19,9 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -27,8 +35,9 @@ import java.util.Properties;
 @ComponentScan("com.revature")
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableTransactionManagement
+@EnableWebSocketMessageBroker
 //@PropertySource("classpath:application.properties")
-public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitializer {
+public class ApplicationConfig implements WebApplicationInitializer, WebSocketMessageBrokerConfigurer {
 
 //	@Value("${db.driver}")
 	private String dbDriver;
@@ -103,6 +112,17 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		return transactionManager;
 	}
 
+	@Bean
+	public ObjectMapper objectMapper() {
+		return new ObjectMapper();
+	}
+
+
+	@Bean
+	public JdbcTemplate jdbcTemplate() {
+		return new JdbcTemplate(dataSource());
+	}
+
 	// NOT A BEAN
 	private final Properties hibernateProperties() {
 		Properties hibernateProperties = new Properties();
@@ -114,10 +134,26 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		//	create: creates the schema, destroying previous data.
 		//	create-drop: drop the schema when the SessionFactory is closed explicitly, typically when the application is stopped.
 		//	none: does nothing with the schema, makes no changes to the database
+
 		hibernateProperties.setProperty(Environment.HBM2DDL_AUTO, "create");
 		hibernateProperties.setProperty(Environment.HBM2DDL_IMPORT_FILES, "import.sql");
+
 		return hibernateProperties;
 	}
+
+	@Override
+	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		registry.addEndpoint("/vote-socket")
+				.setAllowedOrigins("*")
+				.withSockJS();
+	}
+
+	@Override
+	public void configureMessageBroker(MessageBrokerRegistry registry) {
+		registry.setApplicationDestinationPrefixes("/app")
+				.enableSimpleBroker("/vote-message");
+	}
+
 
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
@@ -131,4 +167,5 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		dispatcher.addMapping("/");
 
 	}
+
 }

@@ -27,6 +27,12 @@ public class Credentials {
 		this.email = user.getEmail();
 	}
 
+	public Credentials(String email, String password){
+		this.username = null;
+		this.password = password;
+		this.email = email;
+	}
+
 	public Credentials(String username, String password, String email) {
 		this.username = username;
 		this.password = password;
