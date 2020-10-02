@@ -76,10 +76,11 @@ public class VoteStatusDTO {
 
     @Override
     public String toString() {
-        return "VoteStatusDTO{" +
-                "numberOfVotesCast=" + numberOfVotesCast +
-                ", userVotingFinished=" + userVotingFinished +
-                ", mealVotingFinished=" + mealVotingFinished +
+        return "{" +
+                "mealId = " + mealId +
+                ", numberOfVotesCast = " + numberOfVotesCast +
+                ", userVotingFinished = " + userVotingFinished +
+                ", mealVotingFinished = " + mealVotingFinished +
                 '}';
     }
 }

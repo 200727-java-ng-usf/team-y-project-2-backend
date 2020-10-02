@@ -49,11 +49,12 @@ public class TestControllerSocket {
 
         Vote newVote = new Vote(thisRestaurant, thisMeal, thisUser, thisVote.getVote());
 
-        if (voteService.getNumberOfVotesCast(thisUser) < thisMeal.getNumVotes() ) {
+        if (voteService.getNumberOfVotesCast(thisUser) < thisMeal.getNumVotes() - 1) {
             voteService.createVote(newVote);
             VoteStatusDTO voteStatus = new VoteStatusDTO(thisMeal.getId(), voteService.getNumberOfVotesCast(userService.getUserById(thisVote.getUser())), 0, 0);
             template.convertAndSend("/vote-message", voteStatus);
         } else {
+            voteService.createVote(newVote);
             mealService.addToFinishedVoting(thisUser, thisMeal);
             VoteStatusDTO voteStatus;
             if (thisMeal.getUsersFinishedVoting().size() == thisMeal.getUsersInMeal().size()) {
