@@ -66,7 +66,9 @@ public class MealDao implements CrudDao<Meal> {
 	@Override
 	public Optional<Meal> findById(int id) {
 		Session session = sessionFactory.getCurrentSession();
-		return Optional.of(session.get(Meal.class, id));
+		return Optional.ofNullable(session.createQuery("from Meal where id = :id", Meal.class)
+				.setParameter("id", id)
+				.getSingleResult());
 
 	}
 

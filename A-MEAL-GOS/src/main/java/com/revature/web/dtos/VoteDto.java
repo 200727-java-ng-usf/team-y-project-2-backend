@@ -26,6 +26,8 @@ public class VoteDto {
 		this.vote = vote;
 	}
 
+
+
 	public int getRestaurant() {
 
 		return restaurant;

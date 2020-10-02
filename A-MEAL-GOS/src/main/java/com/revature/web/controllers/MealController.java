@@ -94,7 +94,6 @@ public class MealController {
         return newMeal.getId();
     }
 
-
     @GetMapping(value = "/results/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResultDto getWinner(@PathVariable int id) throws JsonProcessingException {
         return mealService.getWinningMeal(id);
