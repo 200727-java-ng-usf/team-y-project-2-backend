@@ -115,7 +115,11 @@ public class VoteService {
 		return voteDao.deleteById(id);
 	}
 
-
+	/**
+	 * Saves the given vote to the database.
+	 * @param vote the <code>{@link Vote}</code> to save to the database
+	 * @return the given vote.
+	 */
 	@Transactional(readOnly = false)
 	public Vote createVote(Vote vote){
 
@@ -125,6 +129,11 @@ public class VoteService {
 		throw new ResourcePersistenceException("Vote must be positive or negative!");
 	}
 
+	/**
+	 * Returns the number of positive votes cast by a given <code>{@link AppUser}</code> user.
+	 * @param user the <code>{@link AppUser}</code> user to search for the number of cast votes.
+	 * @return the number of positive votes cast by a given <code>{@link AppUser}</code> user.
+	 */
 	public int getNumberOfVotesCast(AppUser user) {
 
 		List<Vote> votes = voteDao.findCastVotesByUser(user);

@@ -138,6 +138,11 @@ public class MealDao implements CrudDao<Meal> {
 		}
 	}
 
+	/**
+	 * Returns the final "winning" restaurant, as unanimously chosen from the group of voters.
+	 * @param mealId the id of the <code>{@link Meal}</code> to search by.
+	 * @return Returns the final "winning" restaurant, as unanimously chosen from the group of voters.
+	 */
 	public ResultDto findWinningRestaurant(int mealId) {
 
 		return jdbcTemplate.queryForObject("SELECT " +

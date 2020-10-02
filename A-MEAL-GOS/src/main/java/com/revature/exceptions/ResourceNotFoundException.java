@@ -13,6 +13,10 @@ public class ResourceNotFoundException extends AmealgoException{
 		super("No resource found with the provided search criteria.");
 	}
 
+	/**
+	 * Creates the exception and prints message "msg" to the screen.
+	 * @param msg the String message to print to the screen.
+	 */
 	public ResourceNotFoundException(String msg) {
 		super(msg);
 	}

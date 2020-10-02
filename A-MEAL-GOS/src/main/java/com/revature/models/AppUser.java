@@ -327,6 +327,20 @@ public class AppUser {
 				'}';
 	}
 
+	/**
+	 * An optional method for .toString() that lets the programmer decide to include
+	 * the (hopefully) undecryptable passwordHash and passwordSalt fields.
+	 * @param showPasswordHashAndSalt if true, prints the regular .toString() with passwordHash and passwordSalt
+	 * @return the String of information this AppUser represents.
+	 * 			if showPasswordHashAndSalt is false, returns:
+	 * "AppUser{" +
+	 * 				"id=" + id +
+	 * 				", username='" + username + '\'' +
+	 * 				", email='" + email + '\'' +
+	 * 				", likes=" + likes +
+	 * 				", role=" + role +
+	 * 				'}'
+	 */
 	public String toString(boolean showPasswordHashAndSalt) {
 		if(showPasswordHashAndSalt) return toString();
 		return "AppUser{" +

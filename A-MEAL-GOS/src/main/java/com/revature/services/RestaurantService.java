@@ -130,6 +130,11 @@ public class RestaurantService {
 		return restaurantDao.deleteById(id);
 	}
 
+	/**
+	 * Saves the given Restaurant to the database.
+	 * @param restaurant the restaurant to save to the database.
+	 * @return the restaurant that was (attempted to be) saved to the database.
+	 */
 	@Transactional
 	public Restaurant createRestaurant(Restaurant restaurant){
 
@@ -138,6 +143,11 @@ public class RestaurantService {
 		return restaurant;
 	}
 
+	/**
+	 * Saves a set of Restaurants to the database.
+	 * @param restaurants the set of restaurants to be saved to the database.
+	 * @return the restaurants that were (attempted to be) saved to the database.
+	 */
 	@Transactional
 	public Set<Restaurant> createRestaurants (Set<Restaurant> restaurants){
 

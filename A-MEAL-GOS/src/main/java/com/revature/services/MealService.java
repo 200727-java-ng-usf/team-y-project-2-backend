@@ -143,11 +143,22 @@ public class MealService {
 	}
 
 
+	/**
+	 * Returns the final "winning" restaurant, as unanimously chosen from the group of voters.
+	 * @param mealId the id of the <code>{@link Meal}</code> to search by.
+	 * @return Returns the final "winning" restaurant, as unanimously chosen from the group of voters.
+	 */
 	@Transactional(readOnly = true)
 	public ResultDto getWinningMeal(int mealId) {
 		return mealDao.findWinningRestaurant(mealId);
 	}
 
+	/**
+	 * Adds <code>{@link AppUser}</code> user to the <code>{@link Meal}</code> meal's set of <code>{@link AppUser}</code>s
+	 * @param user the <code>{@link AppUser}</code> to add to the <code>{@link Meal}</code>
+	 * @param meal the <code>{@link Meal}</code> to which the <code>{@link AppUser}</code> user will be added to the set of <code>{@link AppUser}</code>s.
+	 * @return the <code>{@link AppUser}</code> user that was added to the <code>{@link Meal}</code>.
+	 */
 	@Transactional(readOnly = false)
 	public AppUser addToMeal(AppUser user, Meal meal) {
 		meal.addUsersInMeal(user);
@@ -155,6 +166,12 @@ public class MealService {
 		return user;
 	}
 
+	/**
+	 * Adds <code>{@link AppUser}</code> user to the <code>{@link Meal}</code>'s set of <code>{@link AppUser}</code>s who have used all of their allotted votes.
+	 * @param user the <code>{@link AppUser}</code> to add.
+	 * @param meal the <code>{@link Meal}</code> to add the <code>{@link AppUser}</code> user to.
+	 * @return the user that was added.
+	 */
 	@Transactional(readOnly = false)
 	public AppUser addToFinishedVoting(AppUser user, Meal meal) {
 		meal.addUsersFinishedVoting(user);

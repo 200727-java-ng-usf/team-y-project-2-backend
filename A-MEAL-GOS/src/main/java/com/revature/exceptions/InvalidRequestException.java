@@ -6,6 +6,11 @@ package com.revature.exceptions;
  */
 public class InvalidRequestException extends AmealgoException{
 
+	/**
+	 * Creates the exception and prints
+	 * "An Invalid request was made."
+	 * to the screen.
+	 */
 	public InvalidRequestException(){
 		super("An Invalid request was made.");
 	}
