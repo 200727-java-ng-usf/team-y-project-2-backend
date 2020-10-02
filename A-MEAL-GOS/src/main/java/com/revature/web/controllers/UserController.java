@@ -100,9 +100,11 @@ public class UserController {
 	@GetMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Set<Restaurant> getUserLikesWithPrincipal(HttpServletRequest req){
 		try {
+			System.out.println("in getUserLikesWithPrincipal()");
 			Object o = req.getSession().getAttribute("principal");
 			ObjectMapper mapper = new ObjectMapper();
-			Principal principal = mapper.readValue((String) o,Principal.class);
+			Principal principal = mapper.readValue((String) o,Principal.class);//this is throwing the exception
+			System.out.println("principal id: " + principal.getId());
 			return userService.getUserById(principal.getId()).getLikes();
 
 		} catch (JsonProcessingException e) {

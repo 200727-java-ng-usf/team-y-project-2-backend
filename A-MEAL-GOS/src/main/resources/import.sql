@@ -58,12 +58,7 @@ insert into amg_likes values (4, 5);
 
 insert into amg_meals (final_restaurant_id, meal_name, num_votes) values (1, 'First Meal', 2);
 
-insert into amg_votes (amg_vote, vote_meal_id, restaurant_id, amg_user_id) values (1, 1, 1, 1);
-insert into amg_votes (amg_vote, vote_meal_id, restaurant_id, amg_user_id) values (1, 1, 2, 1);
-insert into amg_votes (amg_vote, vote_meal_id, restaurant_id, amg_user_id) values (1, 1, 3, 1);
-insert into amg_votes (amg_vote, vote_meal_id, restaurant_id, amg_user_id) values (1, 1, 1, 2);
-insert into amg_votes (amg_vote, vote_meal_id, restaurant_id, amg_user_id) values (0, 1, 2, 2);
-insert into amg_votes (amg_vote, vote_meal_id, restaurant_id, amg_user_id) values (0, 1, 3, 2);
+
 
 insert into amg_meal_restaurants values (1, 1);
 insert into amg_meal_restaurants values (1, 2);
@@ -86,32 +81,4 @@ insert into amg_meal_restaurants values (1, 18);
 insert into amg_meal_restaurants values (1, 19);
 insert into amg_meal_restaurants values (1, 20);
 
-insert into amg_meal_users values (1, 1);
-insert into amg_meal_users values (1, 2);
-insert into amg_meal_users values (1, 3);
-insert into amg_meal_users values (1, 4);
-insert into amg_meal_users values (1, 5);
-insert into amg_meal_users values (1, 6);
-insert into amg_meal_users values (1, 7);
-insert into amg_meal_users values (1, 8);
-insert into amg_meal_users values (1, 9);
-insert into amg_meal_users values (1, 10);
-insert into amg_meal_users values (1, 11);
-insert into amg_meal_users values (1, 12);
-insert into amg_meal_users values (1, 13);
-insert into amg_meal_users values (1, 14);
-insert into amg_meal_users values (1, 15);
-insert into amg_meal_users values (1, 16);
-insert into amg_meal_users values (1, 17);
-insert into amg_meal_users values (1, 18);
-insert into amg_meal_users values (1, 19);
-insert into amg_meal_users values (1, 20);
-insert into amg_meal_users values (1, 21);
-insert into amg_meal_users values (1, 22);
-insert into amg_meal_users values (1, 23);
-insert into amg_meal_users values (1, 24);
-insert into amg_meal_users values (1, 25);
-insert into amg_meal_users values (1, 26);
 
-insert into amg_meal_users_voted values (1, 1);
-insert into amg_meal_users_voted values (1, 2);
