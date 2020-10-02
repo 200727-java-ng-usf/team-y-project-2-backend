@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import javax.persistence.NoResultException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -93,6 +94,12 @@ public class UserServiceTest {
 		sut.getAllUser();
 	}
 
+	@Test(expected = ResourceNotFoundException.class)
+	public void getExceptionAllUser() throws ResourceNotFoundException {
+		when(mopitory.findAll()).thenThrow(RuntimeException.class);
+		sut.getAllUser();
+	}
+
 	@Test
 	public void getAllUser() throws ResourceNotFoundException {
 		when(mopitory.findAll()).thenReturn(mockUsers);
@@ -121,10 +128,42 @@ public class UserServiceTest {
 		assertEquals(user1, sut.getUserByUsername("LookAtMe1"));
 	}
 
+	@Test(expected = InvalidRequestException.class)
+	public void getUserByEmptyUsername() {
+		sut.getUserByUsername("");
+	}
+
+	@Test(expected = InvalidRequestException.class)
+	public void getUserByNullUsername() {
+		sut.getUserByUsername(null);
+	}
+
 	@Test(expected = AmealgoException.class)
 	public void getNullUserByUsername() {
 		when(mopitory.findUserByUsername("Jerry")).thenReturn(null);
 		sut.getUserByUsername("LookAtMe1");
+	}
+
+	@Test
+	public void getUserByEmail() {
+		when(mopitory.findUserByEmail("LookAtMe1")).thenReturn(Optional.of(user1));
+		assertEquals(user1, sut.getUserByEmail("LookAtMe1"));
+	}
+
+	@Test(expected = InvalidRequestException.class)
+	public void getUserByEmptyEmail() {
+		sut.getUserByEmail("");
+	}
+
+	@Test(expected = InvalidRequestException.class)
+	public void getUserByNullEmail() {
+		sut.getUserByEmail(null);
+	}
+
+	@Test(expected = AmealgoException.class)
+	public void getNullUserByEmail() {
+		when(mopitory.findUserByEmail("Jerry")).thenReturn(null);
+		sut.getUserByEmail("LookAtMe1");
 	}
 
 	@Test
@@ -148,7 +187,7 @@ public class UserServiceTest {
 	@Test(expected = InvalidRequestException.class)
 	public void authenticateNullUsername() {
 		Credentials creds = Mockito.mock(Credentials.class);
-		when(creds.getUsername()).thenReturn(null);
+		when(creds.getEmail()).thenReturn(null);
 		when(creds.getPassword()).thenReturn("password");
 		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
@@ -159,7 +198,7 @@ public class UserServiceTest {
 	@Test(expected = InvalidRequestException.class)
 	public void authenticateEmptyUsername() {
 		Credentials creds = Mockito.mock(Credentials.class);
-		when(creds.getUsername()).thenReturn("");
+		when(creds.getEmail()).thenReturn("");
 		when(creds.getPassword()).thenReturn("password");
 		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
@@ -170,7 +209,7 @@ public class UserServiceTest {
 	@Test(expected = InvalidRequestException.class)
 	public void authenticateNullPassword() {
 		Credentials creds = Mockito.mock(Credentials.class);
-		when(creds.getUsername()).thenReturn("Mr.");
+		when(creds.getEmail()).thenReturn("mr.meseeks100000@yessirree.org");
 		when(creds.getPassword()).thenReturn(null);
 		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
@@ -181,7 +220,7 @@ public class UserServiceTest {
 	@Test(expected = InvalidRequestException.class)
 	public void authenticateEmptyPassword() {
 		Credentials creds = Mockito.mock(Credentials.class);
-		when(creds.getUsername()).thenReturn("Mr.");
+		when(creds.getEmail()).thenReturn("mr.meseeks100000@yessirree.org");
 		when(creds.getPassword()).thenReturn("");
 		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(true);
@@ -189,12 +228,12 @@ public class UserServiceTest {
 		assertEquals(user1.getUsername(), sut.authenticate(creds).getUsername());
 	}
 
-	@Test(expected = AmealgoException.class)
+	@Test(expected = AuthenticationException.class)
 	public void authenticateInvalidPassword() {
 		Credentials creds = Mockito.mock(Credentials.class);
-		when(creds.getUsername()).thenReturn("Mr.");
+		when(creds.getEmail()).thenReturn("mr.meseeks100000@yessirree.org");
 		when(creds.getPassword()).thenReturn("password");
-		when(mopitory.findUserByUsername(creds.getUsername())).thenReturn(Optional.of(user1));
+		when(mopitory.findUserByEmail(creds.getEmail())).thenReturn(Optional.of(user1));
 		when(user1.validatePassword(anyString(), any(), any())).thenReturn(false);
 		assertEquals(user1.getId(), sut.authenticate(creds).getId());
 		assertEquals(user1.getUsername(), sut.authenticate(creds).getUsername());
@@ -215,6 +254,13 @@ public class UserServiceTest {
 	@Test(expected = ResourcePersistenceException.class)
 	public void registerPreexistingUser() {
 		when(mopitory.findUserByEmail(user1.getEmail())).thenReturn(Optional.of(user1));
+		sut.register(user1);
+	}
+
+	@Test(expected = ResourcePersistenceException.class)
+	public void registerFail() {
+		when(mopitory.findUserByEmail(user1.getEmail())).thenReturn(Optional.empty());
+		when(mopitory.save(any())).thenThrow(RuntimeException.class);
 		sut.register(user1);
 	}
 
@@ -261,10 +307,32 @@ public class UserServiceTest {
 		assertTrue(sut.isUsernameAvailable("LookAtMe10"));
 	}
 
+	@Test(expected = InvalidRequestException.class)
+	public void isNullUsernameAvailable() {
+		sut.isUsernameAvailable(null);
+	}
+
+	@Test(expected = InvalidRequestException.class)
+	public void isEmptyUsernameAvailable() {
+		sut.isUsernameAvailable("");
+	}
+
 	@Test
 	public void isUsernameNotAvailable() {
 		when(mopitory.findUserByUsername("LookAtMe1")).thenReturn(Optional.of(user1));
 		assertFalse(sut.isUsernameAvailable("LookAtMe1"));
+	}
+
+	@Test
+	public void isUsernameNoResult() {
+		when(mopitory.findUserByUsername("LookAtMe10")).thenThrow(NoResultException.class);
+		assertTrue(sut.isUsernameAvailable("LookAtMe10"));
+	}
+
+	@Test(expected = AmealgoException.class)
+	public void isUsernameException() {
+		when(mopitory.findUserByUsername("LookAtMe10")).thenThrow(RuntimeException.class);
+		sut.isUsernameAvailable("LookAtMe10");
 	}
 
 	@Test
@@ -273,16 +341,91 @@ public class UserServiceTest {
 		assertTrue(sut.isEmailAvailable("mr.meseeks100000@yessirree.org"));
 	}
 
+	@Test(expected = InvalidRequestException.class)
+	public void isNullEmailAvailable() {
+		sut.isEmailAvailable(null);
+	}
+
+	@Test(expected = InvalidRequestException.class)
+	public void isEmptyEmailAvailable() {
+		sut.isEmailAvailable("");
+	}
+
 	@Test
 	public void isEmailNotAvailable() {
 		when(mopitory.findUserByEmail("mr.meseeks1@yessirree.org")).thenReturn(Optional.of(user1));
 		assertFalse(sut.isEmailAvailable("mr.meseeks1@yessirree.org"));
 	}
 
+	@Test
+	public void isEmailNoResult() {
+		when(mopitory.findUserByEmail("mr.meseeks1@yessirree.org")).thenThrow(NoResultException.class);
+		assertTrue(sut.isEmailAvailable("mr.meseeks1@yessirree.org"));
+	}
+
+	@Test(expected = AmealgoException.class)
+	public void isEmailException() {
+		when(mopitory.findUserByEmail("mr.meseeks1@yessirree.org")).thenThrow(RuntimeException.class);
+		sut.isEmailAvailable("mr.meseeks1@yessirree.org");
+	}
+
 	//TODO ALL CASES
 	@Test
 	public void isUserValid() {
 		assertTrue(sut.isUserValid(user1));
+	}
+
+	@Test
+	public void isNullUserValid() {
+		assertFalse(sut.isUserValid(null));
+	}
+
+	@Test
+	public void isUserEmptyUsernameValid() {
+		when(user1.getUsername()).thenReturn("");
+		assertFalse(sut.isUserValid(user1));
+	}
+
+	@Test
+	public void isUserSpaceyUsernameValid() {
+		when(user1.getUsername()).thenReturn("            ");
+		assertFalse(sut.isUserValid(user1));
+	}
+
+	@Test
+	public void isUserNullUsernameValid() {
+		when(user1.getUsername()).thenReturn(null);
+		assertFalse(sut.isUserValid(user1));
+	}
+
+	@Test
+	public void isUserNullPasswordValid() {
+		when(user1.getPasswordHash()).thenReturn(null);
+		assertFalse(sut.isUserValid(user1));
+	}
+
+	@Test
+	public void isUserEmptyPasswordValid() {
+		when(user1.getPasswordHash()).thenReturn(new byte[]{});
+		assertFalse(sut.isUserValid(user1));
+	}
+
+	@Test
+	public void isUserEmptyEmailValid() {
+		when(user1.getEmail()).thenReturn("");
+		assertFalse(sut.isUserValid(user1));
+	}
+
+	@Test
+	public void isUserSpaceyEmailValid() {
+		when(user1.getEmail()).thenReturn("            ");
+		assertFalse(sut.isUserValid(user1));
+	}
+
+	@Test
+	public void isUserNullEmailValid() {
+		when(user1.getEmail()).thenReturn(null);
+		assertFalse(sut.isUserValid(user1));
 	}
 
 

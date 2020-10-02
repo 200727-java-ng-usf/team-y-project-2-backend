@@ -67,7 +67,7 @@ public class UserController {
 		boolean like = false;
 		try{
 			AppUser user = userService.getUserById(vote.getUser_id());
-			Restaurant restaurant = restaurantService.getRestaurantByPlaceId(vote.getRestaurant_place_id());
+			Restaurant restaurant = restaurantService.getRestaurantById(vote.getRestaurant_place_id());
 			if(user.getLikes().contains(restaurant)){
 				user.removeLike(restaurant);
 				like = false;
@@ -85,10 +85,10 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "{user}/likes/{rest_vote}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public boolean ValidateLikedRestaurant(@PathVariable int user, @PathVariable String rest_vote){
+	public boolean ValidateLikedRestaurant(@PathVariable int user, @PathVariable int rest_vote){
 		try{
 			AppUser appUser = userService.getUserById(user);
-			Restaurant restaurant = restaurantService.getRestaurantByPlaceId(rest_vote);
+			Restaurant restaurant = restaurantService.getRestaurantById(rest_vote);
 			if(appUser.getLikes().contains(restaurant)) return true;
 			else return false;
 		} catch(Exception e) {
@@ -116,9 +116,7 @@ public class UserController {
 
 	@GetMapping(value = "/id/{id}/likes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Set<Restaurant> getUserLikesWithUserId(@PathVariable int id) {
-
-			return userService.getUserById(id).getLikes();
-
+		return userService.getUserById(id).getLikes();
 	}
 
 
