@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.hibernate.cfg.Environment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -119,6 +120,11 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 //		return new ServerWebSocketContainer("/endpoint").withSockJs();
 //	}
 
+	@Bean
+	public JdbcTemplate jdbcTemplate() {
+		return new JdbcTemplate(dataSource());
+	}
+
 	// NOT A BEAN
 	private final Properties hibernateProperties() {
 		Properties hibernateProperties = new Properties();
@@ -130,7 +136,8 @@ public class ApplicationConfig implements WebMvcConfigurer, WebApplicationInitia
 		//	create: creates the schema, destroying previous data.
 		//	create-drop: drop the schema when the SessionFactory is closed explicitly, typically when the application is stopped.
 		//	none: does nothing with the schema, makes no changes to the database
-		hibernateProperties.setProperty(Environment.HBM2DDL_AUTO, "update");
+
+		hibernateProperties.setProperty(Environment.HBM2DDL_AUTO, "validate");
 		hibernateProperties.setProperty(Environment.HBM2DDL_IMPORT_FILES, "import.sql");
 
 		return hibernateProperties;

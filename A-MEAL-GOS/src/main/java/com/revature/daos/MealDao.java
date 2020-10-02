@@ -1,10 +1,15 @@
 package com.revature.daos;
 
 import com.revature.models.Meal;
+import com.revature.models.Vote;
+import com.revature.util.WinningVoteMapper;
+import com.revature.web.dtos.ResultDto;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -22,10 +27,14 @@ public class MealDao implements CrudDao<Meal> {
 	 * The <code>{@link SessionFactory}</code> sessionFactory instance.
 	 */
 	private SessionFactory sessionFactory;
+	private WinningVoteMapper rowMapper;
+	private JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	public MealDao(SessionFactory factory){
+	public MealDao(SessionFactory factory, WinningVoteMapper rowMapper, JdbcTemplate jdbcTemplate){
 		sessionFactory = factory;
+		this.rowMapper = rowMapper;
+		this.jdbcTemplate = jdbcTemplate;
 	}
 	/**
 	 * Saves the given <code>{@link Meal}</code> to the repository.
@@ -125,5 +134,27 @@ public class MealDao implements CrudDao<Meal> {
 			he.printStackTrace();
 			return false;
 		}
+	}
+
+	public ResultDto findWinningRestaurant(int mealId) {
+
+		return jdbcTemplate.queryForObject("SELECT " +
+				"SUM (av.amg_vote) AS total, " +
+				"ar.restaurant_name, " +
+				"ar.address " +
+				"FROM " +
+				"amg_votes av " +
+				"JOIN  " +
+				"amg_restaurants ar " +
+				"ON  " +
+				"av.restaurant_id = ar.amg_restaurant_id  " +
+				"WHERE  " +
+				"av.vote_meal_id = ? " +
+				"GROUP BY " +
+				"av.restaurant_id, " +
+				"ar.restaurant_name, " +
+				"ar.address " +
+				"ORDER BY total DESC " +
+				"LIMIT 1", rowMapper, mealId);
 	}
 }
