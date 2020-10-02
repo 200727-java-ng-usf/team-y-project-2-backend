@@ -7,6 +7,7 @@ import com.revature.daos.VoteDao;
 import com.revature.exceptions.AmealgoException;
 import com.revature.exceptions.InvalidRequestException;
 import com.revature.exceptions.ResourceNotFoundException;
+import com.revature.exceptions.ResourcePersistenceException;
 import com.revature.models.*;
 import com.revature.models.Vote;
 import com.revature.util.ApplicationConfig;
@@ -155,6 +156,12 @@ public class VoteServiceTest {
         sut.getAllVotes();
     }
 
+    @Test(expected = ResourceNotFoundException.class)
+    public void getExceptionAllVotes() throws ResourceNotFoundException {
+        when(mopitory.findAll()).thenThrow(RuntimeException.class);
+        sut.getAllVotes().toArray();
+    }
+
     @Test
     public void getAllVotes() throws ResourceNotFoundException {
         when(mopitory.findAll()).thenReturn(mockVotes);
@@ -183,6 +190,17 @@ public class VoteServiceTest {
         assertEquals(mockVotes, sut.getVotesByMeal(meal1));
     }
 
+    @Test(expected = InvalidRequestException.class)
+    public void getVoteByNullMeal() {
+        sut.getVotesByMeal(null);
+    }
+
+    @Test(expected = ResourceNotFoundException.class)
+    public void getVoteBynonExistentMeal() {
+        when(mopitory.findVotesByMeal(meal1)).thenThrow(RuntimeException.class);
+        sut.getVotesByMeal(meal1);
+    }
+
     @Test
     public void deleteVoteId() {
         when(mopitory.findById(1)).thenReturn(Optional.of(vote1));
@@ -190,14 +208,26 @@ public class VoteServiceTest {
     }
 
     @Test
-    public void newVote() {
+    public void createVote() {
         when(mopitory.save(vote1)).thenReturn(Optional.ofNullable(vote1));
         assertEquals(vote1, sut.createVote(vote1));
+    }
+
+    @Test(expected = ResourcePersistenceException.class)
+    public void createWildVote() {
+        when(vote1.getVote()).thenReturn(Short.MAX_VALUE);
+        sut.createVote(vote1);
     }
 
     @Test
     public void updatevote() {
         when(mopitory.update(vote1)).thenReturn(true);
         assertTrue(sut.updateVote(vote1));
+    }
+
+    @Test
+    public void getNumberOfVotesCast() {
+        when(mopitory.findCastVotesByUser(user1)).thenReturn(mockVotes);
+        assertEquals(mockVotes.size(), sut.getNumberOfVotesCast(user1));
     }
 }
