@@ -1,14 +1,22 @@
 package com.revature.web.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.models.AppUser;
 import com.revature.models.Meal;
 import com.revature.models.Restaurant;
+
+import com.revature.models.Vote;
+import com.revature.services.MealService;
+import com.revature.web.dtos.ResultDto;
+
 import com.revature.services.MealService;
 import com.revature.services.UserService;
 import com.revature.web.dtos.Credentials;
 import com.revature.web.dtos.Principal;
 
 import com.revature.services.RestaurantService;
+
 
 import com.revature.web.security.Secured;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +27,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+
+import java.util.Optional;
+
 import java.util.Set;
+
 
 @RestController
 @RequestMapping("/meals")
@@ -39,10 +51,10 @@ public class MealController {
 
     // produces is good practice to include.
 //    @Secured(allowedRoles = {"Admin", "Manager"})
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Meal> getAllMeals() {
-        return mealService.getAllMeals();
-    }
+//    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+//    public List<Meal> getAllMeals() {
+//        return mealService.getAllMeals();
+//    }
 
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Meal getMealById(@PathVariable int id) {
@@ -81,6 +93,13 @@ public class MealController {
 
         return newMeal.getId();
     }
+
+    @GetMapping(value = "/results/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResultDto getWinner(@PathVariable int id) throws JsonProcessingException {
+        return mealService.getWinningMeal(id);
+    }
+
+
 
     @PostMapping(value = "/voted/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public int setMealFinishedVoting(@RequestBody Credentials creds, @PathVariable int id, HttpServletRequest req) {
