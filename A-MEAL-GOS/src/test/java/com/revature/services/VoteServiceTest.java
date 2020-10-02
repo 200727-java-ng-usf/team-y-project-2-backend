@@ -11,6 +11,7 @@ import com.revature.models.*;
 import com.revature.models.Vote;
 import com.revature.util.ApplicationConfig;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,6 +56,12 @@ public class VoteServiceTest {
     private Meal meal3;
     private Meal meal4;
     private Meal meal5;
+    private List<AppUser> mockUser;
+    private AppUser user1;
+    private AppUser user2;
+    private AppUser user3;
+    private AppUser user4;
+    private AppUser user5;
     private long count = 1;
 
     @Before
@@ -73,6 +80,7 @@ public class VoteServiceTest {
         mockVotes.add(vote3);
         mockVotes.add(vote4);
         mockVotes.add(vote5);
+        mockMeals = new ArrayList<>();
         meal1 = setupMeal(meal1);
         meal2 = setupMeal(meal2);
         meal3 = setupMeal(meal3);
@@ -83,8 +91,17 @@ public class VoteServiceTest {
         mockMeals.add(meal3);
         mockMeals.add(meal4);
         mockMeals.add(meal5);
-
-
+        mockUser = new ArrayList<>();
+        user1 = setupUser(user1);
+        user2 = setupUser(user2);
+        user3 = setupUser(user3);
+        user4 = setupUser(user4);
+        user5 = setupUser(user5);
+        mockUser.add(user1);
+        mockUser.add(user2);
+        mockUser.add(user3);
+        mockUser.add(user4);
+        mockUser.add(user5);
     }
 
     private Vote setupVote(Vote u) {
@@ -101,17 +118,36 @@ public class VoteServiceTest {
         return m;
     }
 
+    private AppUser setupUser(AppUser u) {
+        u = Mockito.mock(AppUser.class);
+        when(u.getId()).thenReturn((int) count);
+        count++;
+        return u;
+    }
+
     @After
     public void tearDown() throws Exception {
         sut = null;
         mopitory = null;
         mockVotes = null;
+        mockUser = null;
+        mockMeals = null;
         count = 1;
         vote1 = null;
         vote2 = null;
         vote3 = null;
         vote4 = null;
         vote5 = null;
+        user1 = null;
+        user2 = null;
+        user3 = null;
+        user4 = null;
+        user5 = null;
+        meal1 = null;
+        meal2 = null;
+        meal3 = null;
+        meal4 = null;
+        meal5 = null;
     }
 
     @Test(expected = ResourceNotFoundException.class)
@@ -157,5 +193,11 @@ public class VoteServiceTest {
     public void newVote() {
         when(mopitory.save(vote1)).thenReturn(Optional.ofNullable(vote1));
         assertEquals(vote1, sut.createVote(vote1));
+    }
+
+    @Test
+    public void updatevote() {
+        when(mopitory.update(vote1)).thenReturn(true);
+        assertTrue(sut.updateVote(vote1));
     }
 }
