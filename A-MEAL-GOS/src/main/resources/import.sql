@@ -112,6 +112,3 @@ insert into amg_meal_users values (1, 23);
 insert into amg_meal_users values (1, 24);
 insert into amg_meal_users values (1, 25);
 insert into amg_meal_users values (1, 26);
-
-insert into amg_meal_users_voted values (1, 1);
-insert into amg_meal_users_voted values (1, 2);
