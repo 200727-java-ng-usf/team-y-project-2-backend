@@ -112,17 +112,12 @@ public class UserController {
 		return null;
 	}
 
-//	@GetMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE)
-//	public Set<Restaurant> getUserLikesWithUserId(int id) {
-//
-//			return userService.getUserById(id).getLikes();
-//
-//
-//
-//	}
+	@GetMapping(value = "/id/{id}/likes", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Set<Restaurant> getUserLikesWithUserId(@PathVariable int id) {
 
+			return userService.getUserById(id).getLikes();
 
-
+	}
 
 
 

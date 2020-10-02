@@ -138,21 +138,19 @@ public class RestaurantDao implements CrudDao<Restaurant> {
                 .getResultList();
     }
 
-    /**
-     * Returns an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given address.
-     *
-     * @param address the address associated with the desired <code>{@link Restaurant}</code>
-     * @return an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given address.
-     * If none match the address, an <code>{@link Optional}</code>.empty() is returned.
-     */
-    public Optional<Restaurant> findRestaurantByAddress(String address) {
-        Session session = sessionFactory.getCurrentSession();
-        return Optional.ofNullable(session.createQuery("from Restaurant rs where rs.address = :address", Restaurant.class)
-                .setParameter("address", address)
-                .getSingleResult());
-    }
 
-
+	/**
+	 * Returns an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given address.
+	 * @param address the address associated with the desired <code>{@link Restaurant}</code>
+	 * @return an <code>{@link Optional}</code><<code>{@link Restaurant}</code>> with the given address.
+	 * 			If none match the address, an <code>{@link Optional}</code>.empty() is returned.
+	 */
+	public Optional<Restaurant> findRestaurantByAddress(String address) {
+		Session session = sessionFactory.getCurrentSession();
+		return Optional.ofNullable(session.createQuery("from Restaurant rs where rs.address = :address", Restaurant.class)
+				.setParameter("address", address)
+				.getSingleResult());
+	}
 
     /**
      *
@@ -164,5 +162,7 @@ public class RestaurantDao implements CrudDao<Restaurant> {
         Session session = sessionFactory.getCurrentSession();
         session.save(restaurant);
         return Optional.of(restaurant);
+
     }
+
 }
