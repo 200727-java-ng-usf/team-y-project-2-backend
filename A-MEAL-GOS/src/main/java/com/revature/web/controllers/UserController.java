@@ -85,10 +85,10 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "{user}/likes/{rest_vote}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public boolean ValidateLikedRestaurant(@PathVariable int user, @PathVariable String rest_vote){
+	public boolean ValidateLikedRestaurant(@PathVariable int user, @PathVariable int rest_vote){
 		try{
 			AppUser appUser = userService.getUserById(user);
-			Restaurant restaurant = restaurantService.getRestaurantByPlaceId(rest_vote);
+			Restaurant restaurant = restaurantService.getRestaurantById(rest_vote);
 			if(appUser.getLikes().contains(restaurant)) return true;
 			else return false;
 		} catch(Exception e) {
