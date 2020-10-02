@@ -32,7 +32,8 @@ public class RestaurantService {
 
 	/**
 	 * Returns all restaurants registered within the database.
-	 * @return a Set of <code>{@link Restaurant}</code>s that have been registered and saved to the database
+	 * @return a List of <code>{@link Restaurant}</code>s that have been registered and saved to the database
+	 * @throws ResourceNotFoundException
 	 */
 	@Transactional(readOnly = true)
 	public List<Restaurant> getAllRestaurant() throws ResourceNotFoundException {
@@ -48,6 +49,12 @@ public class RestaurantService {
 		return users;
 	}
 
+	/**
+	 * Returns all restaurants registered within the database in the meal with the given meal id.
+	 * @param mealId the int id of the meal to search for
+	 * @return a List of <code>{@link Restaurant}</code>s that are associated with the meal with the given meal id
+	 * @throws ResourceNotFoundException
+	 */
 	@Transactional(readOnly = true)
 	public List<Restaurant> getMealRestaurants(int mealId) throws ResourceNotFoundException {
 		List<Restaurant> restaurants = new ArrayList<>();
