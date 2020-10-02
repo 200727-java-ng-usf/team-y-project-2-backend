@@ -64,15 +64,23 @@ public class UserController {
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public boolean addLikedRestaurant(@RequestBody UserVote vote){
+		boolean like = false;
 		try{
 			AppUser user = userService.getUserById(vote.getUser_id());
 			Restaurant restaurant = restaurantService.getRestaurantByPlaceId(vote.getRestaurant_place_id());
-			user.addLike(restaurant);
+			if(user.getLikes().contains(restaurant)){
+				user.removeLike(restaurant);
+				like = false;
+			}else {
+				user.addLike(restaurant);
+				like = true;
+			}
+			userService.updateUser(user);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		return true;
+		return like;
 	}
 
 	@ResponseStatus(HttpStatus.OK)
