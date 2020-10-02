@@ -67,7 +67,7 @@ public class UserController {
 		boolean like = false;
 		try{
 			AppUser user = userService.getUserById(vote.getUser_id());
-			Restaurant restaurant = restaurantService.getRestaurantByPlaceId(vote.getRestaurant_place_id());
+			Restaurant restaurant = restaurantService.getRestaurantById(vote.getRestaurant_place_id());
 			if(user.getLikes().contains(restaurant)){
 				user.removeLike(restaurant);
 				like = false;
@@ -85,10 +85,10 @@ public class UserController {
 
 	@ResponseStatus(HttpStatus.OK)
 	@GetMapping(value = "{user}/likes/{rest_vote}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public boolean ValidateLikedRestaurant(@PathVariable int user, @PathVariable String rest_vote){
+	public boolean ValidateLikedRestaurant(@PathVariable int user, @PathVariable int rest_vote){
 		try{
 			AppUser appUser = userService.getUserById(user);
-			Restaurant restaurant = restaurantService.getRestaurantByPlaceId(rest_vote);
+			Restaurant restaurant = restaurantService.getRestaurantById(rest_vote);
 			if(appUser.getLikes().contains(restaurant)) return true;
 			else return false;
 		} catch(Exception e) {
@@ -100,9 +100,11 @@ public class UserController {
 	@GetMapping(value = "/likes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Set<Restaurant> getUserLikesWithPrincipal(HttpServletRequest req){
 		try {
+			System.out.println("in getUserLikesWithPrincipal()");
 			Object o = req.getSession().getAttribute("principal");
 			ObjectMapper mapper = new ObjectMapper();
-			Principal principal = mapper.readValue((String) o,Principal.class);
+			Principal principal = mapper.readValue((String) o,Principal.class);//this is throwing the exception
+			System.out.println("principal id: " + principal.getId());
 			return userService.getUserById(principal.getId()).getLikes();
 
 		} catch (JsonProcessingException e) {
