@@ -120,20 +120,20 @@ public class UserService {
 			throw new InvalidRequestException("Invalid credential values provided");
 		}
 
-		try{
-			AppUser user = userDao.findUserByEmail(credentials.getEmail())
-					.orElseThrow(AuthenticationException::new);
-			if(!user.validatePassword(
-					credentials.getPassword(),
-					user.getPasswordHash(),
-					user.getPasswordSalt())){
-				throw new AuthenticationException("Incorrect Password.");
-			}
-			return new Principal(user);
-//			return (user);
-		} catch(Exception e) {
-			throw new AmealgoException(e);
+//		try{
+		AppUser user = userDao.findUserByEmail(credentials.getEmail())
+				.orElseThrow(AuthenticationException::new);
+		if(!user.validatePassword(
+				credentials.getPassword(),
+				user.getPasswordHash(),
+				user.getPasswordSalt())){
+			throw new AuthenticationException("Incorrect Password.");
 		}
+		return new Principal(user);
+//			return (user);
+//		} catch(Exception e) {
+//			throw new AmealgoException(e);
+//		}
 	}
 
 	/**
@@ -204,11 +204,13 @@ public class UserService {
 	 */
 	@Transactional(readOnly = true)
 	public boolean isUsernameAvailable(String username) {
-		if(username == null || username.equals("")){
+		if(username == null || username.trim().equals("")){
 			throw new InvalidRequestException("Username cannot be null or empty!");
 		}
 		try{
-			return userDao.findUserByUsername(username).orElse(null) == null;
+			return !userDao.findUserByUsername(username).isPresent();
+		} catch (NoResultException nre) {
+			return true;
 		} catch (Exception e) {
 			throw new AmealgoException(e);
 		}
@@ -221,7 +223,7 @@ public class UserService {
 	 */
 	@Transactional(readOnly = true)
 	public boolean isEmailAvailable(String email) {
-		if(email == null || email.equals("")){
+		if(email == null || email.trim().equals("")){
 			throw new InvalidRequestException("Email cannot be null or empty!");
 		}
 		try {

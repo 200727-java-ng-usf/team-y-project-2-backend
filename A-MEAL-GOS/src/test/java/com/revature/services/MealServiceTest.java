@@ -10,6 +10,7 @@ import com.revature.models.Meal;
 import com.revature.models.Restaurant;
 import com.revature.models.Role;
 import com.revature.util.ApplicationConfig;
+import com.revature.web.dtos.ResultDto;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +42,11 @@ public class MealServiceTest {
 	private Meal meal3;
 	private Meal meal4;
 	private Meal meal5;
+	private Restaurant r1;
+	private Restaurant r2;
+	private Restaurant r3;
+	private Restaurant r4;
+	private Restaurant r5;
 	private long count = 1;
 
 	@Before
@@ -63,11 +69,6 @@ public class MealServiceTest {
 
 	private Meal setupMeal(Meal m){
 		m = Mockito.mock(Meal.class);
-		Restaurant r1 = null;
-		Restaurant r2 = null;
-		Restaurant r3 = null;
-		Restaurant r4 = null;
-		Restaurant r5 = null;
 		r1 = setupRestaurant(r1, 5*count);
 		r2 = setupRestaurant(r2, 5*count + 1);
 		r3 = setupRestaurant(r3, 5*count + 2);
@@ -249,6 +250,13 @@ public class MealServiceTest {
 	public void isSpaceyNameMealValid() {
 		when(meal1.getMealName()).thenReturn("                             ");
 		assertFalse(sut.isMealValid(meal1));
+	}
+
+	@Test
+	public void getWinningMeal(){
+		ResultDto res = Mockito.mock(ResultDto.class);
+		when(mopitory.findWinningRestaurant(1)).thenReturn(res);
+		assertEquals(res,sut.getWinningMeal(1));
 	}
 
 	@Test
