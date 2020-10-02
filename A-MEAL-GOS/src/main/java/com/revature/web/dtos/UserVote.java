@@ -4,12 +4,12 @@ import java.util.Objects;
 
 public class UserVote {
 	private int user_id;
-	private String restaurant_place_id;
+	private int restaurant_place_id;
 
 	public UserVote() {
 	}
 
-	public UserVote(int user_id, String restaurant_place_id) {
+	public UserVote(int user_id, int restaurant_place_id) {
 
 		this.user_id = user_id;
 		this.restaurant_place_id = restaurant_place_id;
@@ -24,11 +24,11 @@ public class UserVote {
 		this.user_id = user_id;
 	}
 
-	public String getRestaurant_place_id() {
+	public int getRestaurant_place_id() {
 		return restaurant_place_id;
 	}
 
-	public void setRestaurant_place_id(String restaurant_place_id) {
+	public void setRestaurant_place_id(int restaurant_place_id) {
 		this.restaurant_place_id = restaurant_place_id;
 	}
 

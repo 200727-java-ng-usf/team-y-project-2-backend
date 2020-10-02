@@ -67,7 +67,7 @@ public class UserController {
 		boolean like = false;
 		try{
 			AppUser user = userService.getUserById(vote.getUser_id());
-			Restaurant restaurant = restaurantService.getRestaurantByPlaceId(vote.getRestaurant_place_id());
+			Restaurant restaurant = restaurantService.getRestaurantById(vote.getRestaurant_place_id());
 			if(user.getLikes().contains(restaurant)){
 				user.removeLike(restaurant);
 				like = false;
