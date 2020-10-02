@@ -137,21 +137,18 @@ public class MealService {
 
 	@Transactional(readOnly = false)
 	public AppUser addToMeal(AppUser user, Meal meal) {
-		Set<AppUser> setToAdd = new HashSet<>();
-		setToAdd.add(user);
-		meal.setUsersInMeal(setToAdd);
+		meal.addUsersInMeal(user);
 		mealDao.update(meal);
 		return user;
 	}
 
 	@Transactional(readOnly = false)
 	public AppUser addToFinishedVoting(AppUser user, Meal meal) {
-		Set<AppUser> setToAdd = new HashSet<>();
-		setToAdd.add(user);
-		meal.setUsersFinishedVoting(setToAdd);
+		meal.addUsersFinishedVoting(user);
 		mealDao.update(meal);
 		return user;
 	}
+
 
 
 

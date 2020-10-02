@@ -147,6 +147,14 @@ public class Meal {
 		this.usersInMeal = usersInMeal;
 	}
 
+	public void addUsersInMeal(AppUser user) {
+		this.usersInMeal.add(user);
+	}
+
+	public void addUsersFinishedVoting(AppUser user) {
+		this.usersFinishedVoting.add(user);
+	}
+
 	public Set<AppUser> getUsersFinishedVoting() {
 		return usersFinishedVoting;
 	}
