@@ -114,9 +114,7 @@ public class UserController {
 
 	@GetMapping(value = "/id/{id}/likes", produces = MediaType.APPLICATION_JSON_VALUE)
 	public Set<Restaurant> getUserLikesWithUserId(@PathVariable int id) {
-
-			return userService.getUserById(id).getLikes();
-
+		return userService.getUserById(id).getLikes();
 	}
 
 

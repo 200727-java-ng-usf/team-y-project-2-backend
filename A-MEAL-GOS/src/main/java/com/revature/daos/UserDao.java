@@ -230,8 +230,8 @@ public class UserDao implements CrudDao<AppUser> {
 	public Optional<AppUser> findUserByEmail(String email) {
 		Session session = sessionFactory.getCurrentSession();
 		return Optional.ofNullable(session.createQuery("from AppUser au where au.email = :email", AppUser.class)
-					.setParameter("email", email)
-					.getSingleResult());
+				.setParameter("email", email)
+				.getSingleResult());
 
 //		return Optional.of(session.get(AppUser.class, email)); // get returns null, load throws an error.
 	}
